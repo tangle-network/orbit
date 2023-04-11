@@ -37,6 +37,20 @@ services:
     container_name: "visualizer"
     ports:
       - 8152:8050
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy:/data
+      - ./data/caddy_config:/config
+
   athena_blockscout:
     depends_on:
       - db

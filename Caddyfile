@@ -1,0 +1,54 @@
+{
+	# Remove the below line to disable debug logging, could be helpful
+	# but noisy.
+	#debug
+	email {$LETSENCRYPT_EMAIL}
+	# Here we are using the staging server to test our setup
+	# but you can remove this line to use the production server
+	# when you are ready to go live
+	acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+	# If you are testing this locally, in your machine, or if you are
+	# not using a domain name yet, you can turn off the Auto HTTPS feature
+	# by uncommenting the line below
+	#
+	# auto_https off
+}
+
+athena-testnet.{$DOMAIN} {
+	handle_path /rpc {
+		reverse_proxy {
+			to http://athena_chain:8545
+		}
+	}
+	handle_path /explorer {
+		reverse_proxy {
+			to http://athena_blockscout:{$ATHENA_CHAIN_EXPLORER_PORT}
+		}
+	}
+}
+
+hermes-testnet.{$DOMAIN} {
+	handle_path /rpc {
+		reverse_proxy {
+			to http://hermes_chain:8545
+		}
+	}
+	handle_path /explorer {
+		reverse_proxy {
+			to http://hermes_blockscout:{$HERMES_CHAIN_EXPLORER_PORT}
+		}
+	}
+}
+
+demeter-testnet.{$DOMAIN} {
+	handle_path /rpc {
+		reverse_proxy {
+			to http://demeter_chain:8545
+		}
+	}
+	handle_path /explorer {
+		reverse_proxy {
+			to http://demeter_blockscout:{$DEMETER_CHAIN_EXPLORER_PORT}
+		}
+	}
+}
