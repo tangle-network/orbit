@@ -70,18 +70,15 @@ services:
       ETHEREUM_JSONRPC_WS_URL: ws://athena_chain:8545/
       DATABASE_URL: postgresql://postgres:@db:5432/athena_blocksout?ssl=false
       CHAIN_ID: "${ATHENA_CHAIN_ID}"
-      PORT: "${ATHENA_CHAIN_EXLORER_PORT}"
+      PORT: "${ATHENA_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${ATHENA_CHAIN_SUBNETWORK}"
-    ports:
-      - ${ATHENA_CHAIN_EXLORER_PORT}:${ATHENA_CHAIN_EXLORER_PORT}
+      BLOCKSCOUT_HOST: "athena-explorer.${DOMAIN}"
     volumes:
       - ./logs/athena_blocksout/:/app/logs/
 
   athena_chain:
     image: trufflesuite/ganache:latest
     container_name: athena-chain
-    ports:
-      - "${ATHENA_CHAIN_ID}:8545"
     volumes:
       - ./data/athena_chain:/data
     command:
@@ -111,18 +108,15 @@ services:
       ETHEREUM_JSONRPC_WS_URL: ws://hermes_chain:8545/
       DATABASE_URL: postgresql://postgres:@db:5432/hermes_blocksout?ssl=false
       CHAIN_ID: "${HERMES_CHAIN_ID}"
-      PORT: "${HERMES_CHAIN_EXLORER_PORT}"
+      PORT: "${HERMES_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${HERMES_CHAIN_SUBNETWORK}"
-    ports:
-      - ${HERMES_CHAIN_EXLORER_PORT}:${HERMES_CHAIN_EXLORER_PORT}
+      BLOCKSCOUT_HOST: "hermes-explorer.${DOMAIN}"
     volumes:
       - ./logs/hermes_blocksout:/app/logs/
 
   hermes_chain:
     image: trufflesuite/ganache:latest
     container_name: hermes-chain
-    ports:
-      - "${HERMES_CHAIN_ID}:8545"
     volumes:
       - ./data/hermes_chain:/data
     command:
@@ -153,18 +147,15 @@ services:
       ETHEREUM_JSONRPC_WS_URL: ws://demeter_chain:8545/
       DATABASE_URL: postgresql://postgres:@db:5432/demeter_blocksout?ssl=false
       CHAIN_ID: "${DEMETER_CHAIN_ID}"
-      PORT: "${DEMETER_CHAIN_EXLORER_PORT}"
+      PORT: "${DEMETER_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${DEMETER_CHAIN_SUBNETWORK}"
-    ports:
-      - ${DEMETER_CHAIN_EXLORER_PORT}:${DEMETER_CHAIN_EXLORER_PORT}
+      BLOCKSCOUT_HOST: "demeter-explorer.${DOMAIN}"
     volumes:
       - ./logs/demeter_blocksout:/app/logs/
 
   demeter_chain:
     image: trufflesuite/ganache:latest
     container_name: demeter-chain
-    ports:
-      - "${DEMETER_CHAIN_ID}:8545"
     volumes:
       - ./data/demeter_chain:/data
     command:
