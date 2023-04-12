@@ -49,9 +49,9 @@ As of now, we have these testnets running:
 
 | Testnet   | RPC                                      | Explorer                                      |
 | --------- | ---------------------------------------- | --------------------------------------------- |
-| `Athena`  | `https://athena-testnet.webb.tools/rpc`  | `https://athena-testnet.webb.tools/explorer`  |
-| `Hermes`  | `https://hermes-testnet.webb.tools/rpc`  | `https://hermes-testnet.webb.tools/explorer`  |
-| `Demeter` | `https://demeter-testnet.webb.tools/rpc` | `https://demeter-testnet.webb.tools/explorer` |
+| `Athena`  | `https://athena-testnet.webb.tools`  | `https://athena-explorer.webb.tools`  |
+| `Hermes`  | `https://hermes-testnet.webb.tools`  | `https://hermes-explorer.webb.tools`  |
+| `Demeter` | `https://demeter-testnet.webb.tools` | `https://demeter-explorer.webb.tools` |
 
 ## Prerequisites
 

@@ -15,40 +15,40 @@
 }
 
 athena-testnet.{$DOMAIN} {
-	handle_path /rpc {
-		reverse_proxy {
-			to http://athena_chain:8545
-		}
-	}
-	handle_path /explorer {
-		reverse_proxy {
-			to http://athena_blockscout:{$ATHENA_CHAIN_EXPLORER_PORT}
-		}
+	reverse_proxy {
+		to http://athena_chain:8545
 	}
 }
+
+athena-explorer.{$DOMAIN} {
+	reverse_proxy {
+		to http://athena_blockscout:{$ATHENA_CHAIN_EXPLORER_PORT}
+	}
+}
+
 
 hermes-testnet.{$DOMAIN} {
-	handle_path /rpc {
-		reverse_proxy {
-			to http://hermes_chain:8545
-		}
-	}
-	handle_path /explorer {
-		reverse_proxy {
-			to http://hermes_blockscout:{$HERMES_CHAIN_EXPLORER_PORT}
-		}
+	reverse_proxy {
+		to http://hermes_chain:8545
 	}
 }
 
-demeter-testnet.{$DOMAIN} {
-	handle_path /rpc {
-		reverse_proxy {
-			to http://demeter_chain:8545
-		}
-	}
-	handle_path /explorer {
-		reverse_proxy {
-			to http://demeter_blockscout:{$DEMETER_CHAIN_EXPLORER_PORT}
-		}
+hermes-explorer.{$DOMAIN} {
+	reverse_proxy {
+		to http://hermes_blockscout:{$HERMES_CHAIN_EXPLORER_PORT}
 	}
 }
+
+
+demeter-testnet.{$DOMAIN} {
+	reverse_proxy {
+		to http://demeter_chain:8545
+	}
+}
+
+demeter-explorer.{$DOMAIN} {
+	reverse_proxy {
+		to http://demeter_blockscout:{$DEMETER_CHAIN_EXPLORER_PORT}
+	}
+}
+
