@@ -26,7 +26,6 @@ athena-explorer.{$DOMAIN} {
 	}
 }
 
-
 hermes-testnet.{$DOMAIN} {
 	reverse_proxy {
 		to http://hermes_chain:8545
@@ -39,7 +38,6 @@ hermes-explorer.{$DOMAIN} {
 	}
 }
 
-
 demeter-testnet.{$DOMAIN} {
 	reverse_proxy {
 		to http://demeter_chain:8545
@@ -51,4 +49,3 @@ demeter-explorer.{$DOMAIN} {
 		to http://demeter_blockscout:{$DEMETER_CHAIN_EXPLORER_PORT}
 	}
 }
-
