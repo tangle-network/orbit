@@ -47,11 +47,13 @@ a [ganache](https://trufflesuite.com/ganache/) instance with a few tweaks to mak
 
 As of now, we have these testnets running:
 
-| Testnet   | RPC                                  | Explorer                              |
-| --------- | ------------------------------------ | ------------------------------------- |
-| `Athena`  | `https://athena-testnet.webb.tools`  | `https://athena-explorer.webb.tools`  |
-| `Hermes`  | `https://hermes-testnet.webb.tools`  | `https://hermes-explorer.webb.tools`  |
-| `Demeter` | `https://demeter-testnet.webb.tools` | `https://demeter-explorer.webb.tools` |
+| Testnet   | Chain Id | Currency symbol | RPC                                  | Explorer                              |
+| --------- | -------- | --------------- | ------------------------------------ | ------------------------------------- |
+| `Athena`  | 5001     | ETH             | `https://athena-testnet.webb.tools`  | `https://athena-explorer.webb.tools`  |
+| `Hermes`  | 5002     | ETH             | `https://hermes-testnet.webb.tools`  | `https://hermes-explorer.webb.tools`  |
+| `Demeter` | 5003     | ETH             | `https://demeter-testnet.webb.tools` | `https://demeter-explorer.webb.tools` |
+
+Need help adding these networks to your wallet like MetaMask? [Read Here](https://support.metamask.io/hc/en-us/articles/360043227612-How-to-add-a-custom-network-RPC#h_01G63GGJ83DGDRCS2ZWXM37CV5)
 
 ## Prerequisites
 
