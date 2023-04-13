@@ -47,15 +47,18 @@ a [ganache](https://trufflesuite.com/ganache/) instance with a few tweaks to mak
 
 As of now, we have these testnets running:
 
-| Testnet   | RPC                                      | Explorer                                      |
-| --------- | ---------------------------------------- | --------------------------------------------- |
+| Testnet   | RPC                                  | Explorer                              |
+| --------- | ------------------------------------ | ------------------------------------- |
 | `Athena`  | `https://athena-testnet.webb.tools`  | `https://athena-explorer.webb.tools`  |
 | `Hermes`  | `https://hermes-testnet.webb.tools`  | `https://hermes-explorer.webb.tools`  |
 | `Demeter` | `https://demeter-testnet.webb.tools` | `https://demeter-explorer.webb.tools` |
 
 ## Prerequisites
 
-Install Docker: https://docs.docker.com/get-docker/
+- Docker: https://docs.docker.com/get-docker/
+- Nodejs: https://nodejs.org/en/download/
+- Yarn: https://classic.yarnpkg.com/en/docs/install
+- Caddy: https://caddyserver.com/docs/install
 
 ## Installation 💻
 
@@ -70,13 +73,30 @@ cp .env.example .env
 docker compose up
 ```
 
-This will start the testnets locally and you can access them via the RPC endpoints listed below:
+Once it is up, open another terminal and run the following command:
 
-| Testnet   | RPC                     | Explorer                |
-| --------- | ----------------------- | ----------------------- |
-| `Athena`  | `http://localhost:5001` | `http://localhost:4001` |
-| `Hermes`  | `http://localhost:5002` | `http://localhost:4002` |
-| `Demeter` | `http://localhost:5003` | `http://localhost:4003` |
+```bash
+caddy trust
+```
+
+The testnets are running locally and you can access them via the RPC endpoints listed below:
+
+| Testnet   | RPC                                | Explorer                             |
+| --------- | ---------------------------------- | ------------------------------------ |
+| `Athena`  | `https://athena-testnet.localhost` | `https://athena-explorer.localhost`  |
+| `Hermes`  | `https://hermes-testnet.localhost` | `https://hermes-explorer.localhost`  |
+| `Demeter` | `http://demeter-testnet.localhost` | `https://demeter-explorer.localhost` |
+
+## Deploying the smart contracts
+
+To deploy the smart contracts, you can run the following command:
+
+```bash
+cd deploy && yarn
+yarn deploy
+```
+
+This will deploy the smart contracts to the testnets.
 
 <h3 id="deploy"> Deploy with <a href="https://docker.com">Docker</a> ☄️</h3>
 
@@ -86,7 +106,9 @@ You can also deploy the testnets to a remote server using Docker. To do so, you 
 docker compose up -d
 ```
 
-Then configure your reverse proxy to point to the RPC endpoints.
+### Deploying Smart Contracts
+
+For the already deployed smart contracts on the testnets, refer to the [DEPLOYMENTS.md](./DEPLOYMENTS.md) file.
 
 <h2 id="contribute"> Contributing </h2>
 
