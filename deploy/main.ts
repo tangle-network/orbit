@@ -13,6 +13,7 @@ import {
   ChainType,
 } from '@webb-tools/sdk-core';
 import chalk from 'chalk';
+import { deployWETH9 } from './deployWETH.js';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -177,6 +178,15 @@ async function main() {
     }),
   ]).then((txs) => txs.map((tx) => tx.wait()));
 
+  // Deploy WETH on each chain
+  console.log(chalk`{yellow Deploying WETH...}`);
+  const athenaWETH = await deployWETH9(athenaDeployer);
+  const hermesWETH = await deployWETH9(hermesDeployer);
+  const demeterWETH = await deployWETH9(demeterDeployer);
+  console.log(
+    chalk`{green.bold 🎉 WETH Deployed at {blue.bold ${athenaWETH}} 🎉}`
+  );
+
   // Deploy the bridge
   console.log(chalk`{yellow Deploying bridge...}`);
   const deployers: DeployerConfig = {
@@ -192,9 +202,9 @@ async function main() {
   };
 
   const tokens = {
-    [athenaTypedChainId]: ['0'],
-    [hermesTypedChainId]: ['0'],
-    [demeterTypedChainId]: ['0'],
+    [athenaTypedChainId]: ['0', athenaWETH],
+    [hermesTypedChainId]: ['0', hermesWETH],
+    [demeterTypedChainId]: ['0', demeterWETH],
   };
 
   const webb = await deployWebbBridge(tokens, deployers, governorConfig);
