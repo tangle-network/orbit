@@ -30,7 +30,8 @@
     "chalk": "^4",
     "ethers": "5.7.2",
     "ramda": "^0.29.0",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.0",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
     "@types/node": "v18.14",
