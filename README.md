@@ -62,6 +62,7 @@ Need help adding these networks to your wallet like MetaMask? [Read Here](https:
 - Nodejs: https://nodejs.org/en/download/
 - Yarn: https://classic.yarnpkg.com/en/docs/install
 - Caddy: https://caddyserver.com/docs/install
+- DVC: https://dvc.org/doc/install
 
 ## Installation 💻
 
