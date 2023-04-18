@@ -72,6 +72,13 @@ After installing the prerequisites, you can run the following command to start t
 
 ```bash
 cp .env.example .env
+```
+
+Open the `.env` file in your editor and change what it is needed, usually they are the first section of the file.
+
+then, once done you can run the following command:
+
+```bash
 docker compose up
 ```
 
@@ -95,7 +102,37 @@ To deploy the smart contracts, you can run the following command:
 
 ```bash
 cd deploy && yarn
-yarn deploy
+```
+
+As a quick overview of all options you can run the following command:
+
+```bash
+yarn deploy --help
+```
+
+You should see something like the following:
+
+```bash
+❯ yarn deploy --help
+yarn run v1.22.19
+$ NODE_OPTIONS='--use-openssl-ca' ts-node main.ts --help
+Options:
+  --help                      Show help                                [boolean]
+  --version                   Show version number                      [boolean]
+  --wethAddress               The address of the WETH contract          [string]
+  --deployWeth                Whether to deploy WETH   [boolean] [default: true]
+  --webbTokenName             The name of the webb token
+                                        [string] [default: "webbTNT-standalone"]
+  --webbTokenSymbol           The symbol of the webb token
+                                                   [string] [default: "webbTNT"]
+  --allowWrappingNativeToken  Whether to allow wrapping native tokens into webb
+                              tokens                   [boolean] [default: true]
+```
+
+And here is an example of deploying a local bridge named webbWETH Bridge.
+
+```bash
+yarn deploy --deployWeth --allowWrappingNativeToken=false --webbTokenName webbWETH --webbTokenSymbol webbWETH
 ```
 
 This will deploy the smart contracts to the testnets.
@@ -111,6 +148,8 @@ docker compose up -d
 ### Deploying Smart Contracts
 
 For the already deployed smart contracts on the testnets, refer to the [DEPLOYMENTS.md](./DEPLOYMENTS.md) file.
+
+otherwise, the process of deploying smart contracts on the deployed chains is the same as locally.
 
 <h2 id="contribute"> Contributing </h2>
 
