@@ -1,3 +1,4 @@
+import { env } from 'node:process';
 import * as dotenv from 'dotenv';
 import Chai, { expect } from 'chai';
 import ChaiAsPromised from 'chai-as-promised';
@@ -16,12 +17,12 @@ describe('webbWETH', async () => {
     dotenv.config({
       path: '../.env',
     });
-    const domain = process.env.DOMAIN ?? 'localhost';
+    const domain = env.DOMAIN ?? 'localhost';
     const chainRpcUrls = isCI
       ? [
-          `http://${domain}:${process.env.ATHENA_CHAIN_ID}`,
-          `http://${domain}:${process.env.HERMES_CHAIN_ID}`,
-          `http://${domain}:${process.env.DEMETER_CHAIN_ID}`,
+          `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+          `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+          `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
         ]
       : [
           `https://athena-testnet.${domain}`,

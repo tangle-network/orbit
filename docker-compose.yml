@@ -84,6 +84,8 @@ services:
       - ${ATHENA_CHAIN_ID}:8545
     volumes:
       - ./data/athena_chain:/data
+    env_file:
+      - .env
     command:
       - "--chain.chainId=${ATHENA_CHAIN_ID}"
       - "--database.dbPath=/data"
@@ -124,6 +126,8 @@ services:
       - ${HERMES_CHAIN_ID}:8545
     volumes:
       - ./data/hermes_chain:/data
+    env_file:
+      - .env
     command:
       - "--chain.chainId=${HERMES_CHAIN_ID}"
       - "--database.dbPath=/data"
@@ -165,6 +169,8 @@ services:
       - ${DEMETER_CHAIN_ID}:8545
     volumes:
       - ./data/demeter_chain:/data
+    env_file:
+      - .env
     command:
       - "--chain.chainId=${DEMETER_CHAIN_ID}"
       - "--database.dbPath=/data"

@@ -381,9 +381,9 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-        `http://${domain}:${process.env.ATHENA_CHAIN_ID}`,
-        `http://${domain}:${process.env.HERMES_CHAIN_ID}`,
-        `http://${domain}:${process.env.DEMETER_CHAIN_ID}`,
+        `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+        `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+        `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
       ]
     : [
         `https://athena-testnet.${domain}`,
@@ -397,6 +397,9 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
 
   console.log(chalk`{dim Checking connection to providers...}`);
   for (const provider of providers) {
+    console.log(
+      chalk`{dim Checking connection to {blue ${provider.connection.url}}}`
+    );
     const network = await provider.getNetwork();
     console.log(chalk`{dim.green Connected to {blue ${network.chainId}}}`);
   }
