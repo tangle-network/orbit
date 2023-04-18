@@ -13,6 +13,8 @@
     "node": ">=18"
   },
   "scripts": {
+    "postinstall": "yarn dvc:pull",
+    "dvc:pull": "cd ./fixtures && dvc pull && cd ..",
     "ts:check": "tsc --noEmit",
     "ts:build": "tsc",
     "format": "prettier --write .",
@@ -37,12 +39,14 @@
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/chai-as-promised": "^7.1.5",
+    "@types/is-ci": "^3.0.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "v18.14",
     "@types/ramda": "^0.29.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "dotenv": "^16.0.3",
+    "is-ci": "^3.0.1",
     "mocha": "^10.2.0",
     "prettier": "^2.8.7",
     "ts-node": "^10.9.1",

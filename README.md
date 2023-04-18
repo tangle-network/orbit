@@ -12,6 +12,7 @@
 
 <div align="left" >
 
+[![CI](https://github.com/webb-tools/orbit/actions/workflows/ci.yml/badge.svg)](https://github.com/webb-tools/orbit/actions/workflows/ci.yml)
 [![License Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 [![Twitter](https://img.shields.io/twitter/follow/webbprotocol.svg?style=flat-square&label=Twitter&color=1DA1F2)](https://twitter.com/webbprotocol)
 [![Telegram](https://img.shields.io/badge/Telegram-gray?logo=telegram)](https://t.me/webbprotocol)
@@ -61,6 +62,7 @@ Need help adding these networks to your wallet like MetaMask? [Read Here](https:
 - Nodejs: https://nodejs.org/en/download/
 - Yarn: https://classic.yarnpkg.com/en/docs/install
 - Caddy: https://caddyserver.com/docs/install
+- DVC: https://dvc.org/doc/install
 
 ## Installation 💻
 

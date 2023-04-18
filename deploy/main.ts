@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import yargs from 'yargs';
+import isCI from 'is-ci';
 import { hideBin } from 'yargs/helpers';
 import { ethers } from 'ethers';
 import * as dotenv from 'dotenv';
@@ -378,12 +379,17 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   // For Deployment, we create a new dummy wallet and use it to deploy the bridge
   const deployer = ethers.Wallet.createRandom();
   const domain = process.env.DOMAIN ?? 'localhost';
-  // NOTE: We can add more chains here as needed
-  const chainRpcUrls = [
-    `https://athena-testnet.${domain}`,
-    `https://hermes-testnet.${domain}`,
-    `https://demeter-testnet.${domain}`,
-  ];
+  const chainRpcUrls = isCI
+    ? [
+        `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+        `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+        `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+      ]
+    : [
+        `https://athena-testnet.${domain}`,
+        `https://hermes-testnet.${domain}`,
+        `https://demeter-testnet.${domain}`,
+      ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -391,6 +397,9 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
 
   console.log(chalk`{dim Checking connection to providers...}`);
   for (const provider of providers) {
+    console.log(
+      chalk`{dim Checking connection to {blue ${provider.connection.url}}}`
+    );
     const network = await provider.getNetwork();
     console.log(chalk`{dim.green Connected to {blue ${network.chainId}}}`);
   }

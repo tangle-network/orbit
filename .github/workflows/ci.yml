@@ -13,29 +13,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
 
       - name: Copy .env.example to .env
         run: cp .env.example .env
 
-      - name: Install Caddy server
-        run: curl -sS https://webi.sh/caddy | sh
-
-      - name: Setup environment with docker-compose
-        run: docker-compose up -d
+      - name: Setup environment with docker compose
+        run: docker compose up -d
 
       - name: Install Node.js and Yarn
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18.x"
           cache: "yarn"
+          cache-dependency-path: "deploy/yarn.lock"
 
       - name: Install dependencies
         working-directory: deploy
         run: yarn install
-
-      - name: Run caddy trust as root
-        run: sudo caddy trust
 
       - name: Run deployment script
         working-directory: deploy
@@ -44,13 +42,3 @@ jobs:
       - name: Run tests
         working-directory: deploy
         run: yarn test
-
-      - name: Save cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/yarn
-            deploy/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
