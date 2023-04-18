@@ -117,7 +117,7 @@ type DeploymentConfig = {
   webbTokenSymbol: string;
 };
 
-async function deploy(config: DeploymentConfig): Promise<void> {
+async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
   const tokenAddresses: string[] = [];
   if (config.allowWrappingNativeToken) {
     tokenAddresses.push('0');
@@ -242,22 +242,27 @@ async function deploy(config: DeploymentConfig): Promise<void> {
   console.log(chalk`{green.bold 🎉 Bridge Deployed! 🎉}`);
 
   console.log(chalk`{bold Bridge Addresses:}`);
+  let bridgeAddress: string;
   for (const bridgeSide of webb.vBridgeSides.values()) {
     const chainId = await bridgeSide.contract.signer.getChainId();
     console.log(
       chalk`{green.bold Chain ${chainId}:} {blue.bold ${bridgeSide.contract.address}}`
     );
+    bridgeAddress = bridgeSide.contract.address;
   }
 
   console.log(chalk`{bold Anchor Addresses:}`);
+  let anchorAddress: string;
   for (const anchor of webb.vAnchors.values()) {
     const chainId = await anchor.contract.signer.getChainId();
     console.log(
       chalk`{green.bold Chain ${chainId}:} {blue.bold ${anchor.contract.address}}`
     );
+    anchorAddress = anchor.contract.address;
   }
 
   console.log(chalk`{bold Webb Token Addresses:}`);
+  let webbTokenAddress: string;
   for (const [typedChainId, wtoken] of webb.webbTokenAddresses) {
     const deployer = config.deployers[typedChainId];
     const fungibleTokenWrapper = FungibleTokenWrapperFactory.connect(
@@ -271,10 +276,24 @@ async function deploy(config: DeploymentConfig): Promise<void> {
     console.log(
       chalk`{green.bold Chain ${chainId}:} {cyan.bold ${tokenName} (${tokenSymbol})} {blue.bold ${wtoken}}`
     );
+    webbTokenAddress = wtoken;
   }
+
+  assert.ok(bridgeAddress!, 'Bridge address not found');
+  assert.ok(anchorAddress!, 'Anchor address not found');
+  assert.ok(webbTokenAddress!, 'Webb token address not found');
+  return {
+    kind: 'Ok',
+    deployment: {
+      bridgeAddress,
+      anchorAddress,
+      webbTokenAddress,
+      wethAddress: config.wethAddress,
+    },
+  };
 }
 
-type Args = {
+export type Args = {
   wethAddress: string;
   deployWeth: boolean;
   webbTokenName: string;
@@ -335,14 +354,25 @@ async function parseArgs(args: string[]): Promise<Args> {
   return parsed;
 }
 
-// *** MAIN ***
-async function main() {
-  const args = await parseArgs(hideBin(process.argv));
+export type Deployment = {
+  bridgeAddress: string;
+  anchorAddress: string;
+  webbTokenAddress: string;
+  wethAddress?: string;
+};
+
+export type DeploymentResult =
+  | {
+      kind: 'Ok';
+      deployment: Deployment;
+    }
+  | {
+      kind: 'Err';
+      error: string;
+    };
+
+export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
-  // Load the environment variables
-  dotenv.config({
-    path: path.resolve(dirname, '../.env'),
-  });
   const vaultMnemonic = getVaultMnemonic();
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
   // For Deployment, we create a new dummy wallet and use it to deploy the bridge
@@ -396,6 +426,7 @@ async function main() {
     R.zipWith(R.curry(sendFunds)(value), vaultProviders, deployerProviders)
   );
 
+  let result: DeploymentResult;
   try {
     const networks = await Promise.all(
       providers.map((provider) => provider.getNetwork())
@@ -411,9 +442,13 @@ async function main() {
       typedChainIds,
       ...args,
     };
-    await deploy(config);
+    result = await deploy(config);
   } catch (e) {
     console.error(e);
+    result = {
+      kind: 'Err',
+      error: (e as Error).message,
+    };
   }
   const balances = await Promise.all(
     deployerProviders.map((provider) => provider.getBalance())
@@ -432,8 +467,21 @@ async function main() {
   console.log(
     chalk`Funds sent back to Vault wallet: {blue.bold ${vault.address}}`
   );
+  return result;
+}
+
+// *** MAIN ***
+async function main() {
+  const args = await parseArgs(hideBin(process.argv));
+  // Load the environment variables
+  dotenv.config({
+    path: path.resolve(dirname, '../.env'),
+  });
+  await deployWithArgs(args);
   // Exit the script
   exit(0);
 }
 
-main();
+if (env.NODE_ENV !== 'test') {
+  main();
+}
