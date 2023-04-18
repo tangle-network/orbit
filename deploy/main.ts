@@ -2,6 +2,8 @@ import { env, exit } from 'node:process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { ethers } from 'ethers';
 import * as dotenv from 'dotenv';
 import {
@@ -108,16 +110,19 @@ type DeploymentConfig = {
   };
   typedChainIds: number[];
   governorAddress: string;
+  deployWeth: boolean;
+  wethAddress?: string;
+  allowWrappingNativeToken: boolean;
+  webbTokenName: string;
+  webbTokenSymbol: string;
 };
 
 async function deploy(config: DeploymentConfig): Promise<void> {
-  const tokenAddresses: string[] = [
-    '0', // Native token
-  ];
-  let WETHAddress: string;
-  // check if WETH is already deployed
-  const shouldDeployWETH = !ethers.utils.isAddress(env.WETH_ADDRESS!);
-  if (shouldDeployWETH) {
+  const tokenAddresses: string[] = [];
+  if (config.allowWrappingNativeToken) {
+    tokenAddresses.push('0');
+  }
+  if (config.deployWeth) {
     // Deploy WETH on each chain
     console.log(chalk`{yellow Deploying WETH...}`);
     for (const typedChainId of config.typedChainIds) {
@@ -127,17 +132,20 @@ async function deploy(config: DeploymentConfig): Promise<void> {
       console.log(
         chalk`{green.bold Chain ${chainId} WETH Deployed at {blue.bold ${wethAddress}}}`
       );
-      WETHAddress = wethAddress;
+      config.wethAddress = wethAddress;
     }
-  } else {
+    // Add WETH to the token list
+    if (config.wethAddress && !tokenAddresses.includes(config.wethAddress)) {
+      tokenAddresses.push(config.wethAddress);
+    }
+  } else if (config.wethAddress) {
     // otherwise, verify that the WETH address is correct
-    let wethAddress = env.WETH_ADDRESS;
-    assert.ok(wethAddress, 'WETH_ADDRESS not set');
+    assert.ok(config.wethAddress, 'WETH address not set');
     // verify WETH on each chain
     console.log(chalk`{yellow Verifying WETH...}`);
     for (const typedChainId of config.typedChainIds) {
       const deployer = config.deployers[typedChainId];
-      const weth = ERC20Factory.connect(wethAddress, deployer);
+      const weth = ERC20Factory.connect(config.wethAddress, deployer);
       // check that the token symbol is WETH
       const wethSymbol = await weth.symbol();
       assert.equal(
@@ -145,18 +153,14 @@ async function deploy(config: DeploymentConfig): Promise<void> {
         'WETH',
         `Invalid WETH symbol on ${typedChainId}`
       );
-      WETHAddress = ethers.utils.getAddress(wethAddress);
       const chainId = parseTypedChainId(typedChainId).chainId;
       console.log(chalk`{green.bold WETH Verified on ${chainId}!}`);
     }
+    // Add WETH to the token list
+    if (!tokenAddresses.includes(config.wethAddress)) {
+      tokenAddresses.push(config.wethAddress);
+    }
   }
-
-  assert.ok(WETHAddress!, 'WETH address not set');
-  // Add WETH to the token list
-  if (!tokenAddresses.includes(WETHAddress)) {
-    tokenAddresses.push(WETHAddress);
-  }
-
   // Deploy the bridge
   console.log(chalk`{yellow Deploying bridge...}`);
 
@@ -177,15 +181,15 @@ async function deploy(config: DeploymentConfig): Promise<void> {
   );
 
   // Configure fungible tokens for each chain
-  const webbTNTStandalone: TokenConfig = {
-    name: 'webbtTNT-Standalone',
-    symbol: 'webbtTNT',
+  const webbTokenConfig: TokenConfig = {
+    name: config.webbTokenName,
+    symbol: config.webbTokenSymbol,
   };
 
   const fungibleTokensConfig: Map<number, TokenConfig> = new Map(
     Object.keys(config.deployers).map((typedChainId) => [
       parseInt(typedChainId),
-      webbTNTStandalone,
+      webbTokenConfig,
     ])
   );
 
@@ -270,8 +274,70 @@ async function deploy(config: DeploymentConfig): Promise<void> {
   }
 }
 
+type Args = {
+  wethAddress: string;
+  deployWeth: boolean;
+  webbTokenName: string;
+  webbTokenSymbol: string;
+  allowWrappingNativeToken: boolean;
+};
+
+/**
+ * Parse the command line arguments
+ * @param args The command line arguments
+ * @returns The parsed arguments
+ * @throws If the arguments are invalid
+ * @throws If the WETH address is invalid
+ */
+async function parseArgs(args: string[]): Promise<Args> {
+  const parsed: Args = await yargs(args)
+    .options({
+      wethAddress: {
+        type: 'string',
+        description: 'The address of the WETH contract',
+        demandOption: false,
+        conflicts: 'deployWeth',
+        coerce: (arg) => {
+          if (arg && !ethers.utils.isAddress(arg)) {
+            throw new Error('Invalid WETH address');
+          } else {
+            return arg;
+          }
+        },
+      },
+      deployWeth: {
+        type: 'boolean',
+        description: 'Whether to deploy WETH',
+        demandOption: false,
+        default: true,
+        conflicts: 'wethAddress',
+      },
+      webbTokenName: {
+        type: 'string',
+        description: 'The name of the webb token',
+        demandOption: false,
+        default: 'webbTNT-standalone',
+      },
+      webbTokenSymbol: {
+        type: 'string',
+        description: 'The symbol of the webb token',
+        demandOption: false,
+        default: 'webbTNT',
+      },
+      allowWrappingNativeToken: {
+        type: 'boolean',
+        description: 'Whether to allow wrapping native tokens into webb tokens',
+        demandOption: false,
+        default: true,
+      },
+    })
+    .parseAsync();
+  return parsed;
+}
+
 // *** MAIN ***
 async function main() {
+  const args = await parseArgs(hideBin(process.argv));
   console.log(chalk`{bold Starting deployment script...}`);
   // Load the environment variables
   dotenv.config({
@@ -338,10 +404,12 @@ async function main() {
     const typedChainIds = chainIds.map((chainId) =>
       calculateTypedChainId(ChainType.EVM, chainId)
     );
+
     const config: DeploymentConfig = {
       deployers: R.zipObj(typedChainIds, deployerProviders),
       governorAddress: vault.address,
       typedChainIds,
+      ...args,
     };
     await deploy(config);
   } catch (e) {
