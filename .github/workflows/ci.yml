@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Copy .env.example to .env
         run: cp .env.example .env
@@ -25,10 +25,11 @@ jobs:
         run: docker-compose up -d
 
       - name: Install Node.js and Yarn
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18.x"
           cache: "yarn"
+          cache-dependency-path: "deploy/yarn.lock"
 
       - name: Install dependencies
         working-directory: deploy
