@@ -4,6 +4,7 @@ import ChaiAsPromised from 'chai-as-promised';
 import { Deployment, deployWithArgs } from '../main.js';
 import { FungibleTokenWrapper__factory as FungibleTokenWrapperFactory } from '@webb-tools/contracts';
 import { ethers } from 'ethers';
+import isCI from 'is-ci';
 
 Chai.use(ChaiAsPromised);
 
@@ -16,12 +17,17 @@ describe('webbWETH', async () => {
       path: '../.env',
     });
     const domain = process.env.DOMAIN ?? 'localhost';
-    // NOTE: We can add more chains here as needed
-    const chainRpcUrls = [
-      `https://athena-testnet.${domain}`,
-      `https://hermes-testnet.${domain}`,
-      `https://demeter-testnet.${domain}`,
-    ];
+    const chainRpcUrls = isCI
+      ? [
+          `http://${domain}:${process.env.ATHENA_CHAIN_ID}`,
+          `http://${domain}:${process.env.HERMES_CHAIN_ID}`,
+          `http://${domain}:${process.env.DEMETER_CHAIN_ID}`,
+        ]
+      : [
+          `https://athena-testnet.${domain}`,
+          `https://hermes-testnet.${domain}`,
+          `https://demeter-testnet.${domain}`,
+        ];
 
     providers = chainRpcUrls.map(
       (url) => new ethers.providers.JsonRpcProvider(url)
