@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
+      - name: Install Caddy server
+        run: curl -sS https://webi.sh/caddy | sh
+
+      - name: Setup environment with docker-compose
+        run: docker-compose up -d
+
+      - name: Install Node.js and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18.x"
+          cache: "yarn"
+
+      - name: Install dependencies
+        working-directory: deploy
+        run: yarn install
+
+      - name: Run caddy trust as root
+        run: sudo caddy trust
+
+      - name: Run deployment script
+        working-directory: deploy
+        run: yarn deploy
+
+      - name: Run tests
+        working-directory: deploy
+        run: yarn test
+
+      - name: Save cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/yarn
+            deploy/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
