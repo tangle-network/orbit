@@ -45,13 +45,3 @@ jobs:
       - name: Run tests
         working-directory: deploy
         run: yarn test
-
-      - name: Save cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/yarn
-            deploy/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
