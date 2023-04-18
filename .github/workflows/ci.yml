@@ -21,6 +21,9 @@ jobs:
       - name: Install Caddy server
         run: curl -sS https://webi.sh/caddy | sh
 
+      - name: Add .local/bin to the PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Setup environment with docker-compose
         run: docker-compose up -d
 
