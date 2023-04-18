@@ -9,8 +9,6 @@ services:
       POSTGRES_PASSWORD: ""
       POSTGRES_USER: "postgres"
       POSTGRES_HOST_AUTH_METHOD: "trust"
-    ports:
-      - 7432:5432
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
   sig-provider:
@@ -82,6 +80,8 @@ services:
   athena_chain:
     image: trufflesuite/ganache:latest
     container_name: athena-chain
+    ports:
+      - ${ATHENA_CHAIN_ID}:8545
     volumes:
       - ./data/athena_chain:/data
     command:
@@ -120,6 +120,8 @@ services:
   hermes_chain:
     image: trufflesuite/ganache:latest
     container_name: hermes-chain
+    ports:
+      - ${HERMES_CHAIN_ID}:8545
     volumes:
       - ./data/hermes_chain:/data
     command:
@@ -159,6 +161,8 @@ services:
   demeter_chain:
     image: trufflesuite/ganache:latest
     container_name: demeter-chain
+    ports:
+      - ${DEMETER_CHAIN_ID}:8545
     volumes:
       - ./data/demeter_chain:/data
     command:
