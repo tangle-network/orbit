@@ -38,8 +38,8 @@ jobs:
         working-directory: deploy
         run: yarn install
 
-      - name: Run caddy trust as root
-        run: sudo ~/.local/bin/caddy trust
+      - name: Run caddy trust
+        run: ~/.local/bin/caddy trust
 
       - name: Run deployment script
         working-directory: deploy
