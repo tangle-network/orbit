@@ -18,6 +18,9 @@ jobs:
       - name: Copy .env.example to .env
         run: cp .env.example .env
 
+      - name: Update System deps
+        run: sudo apt update && sudo apt install libnss3-tools pkg-config libssl-dev
+
       - name: Install Caddy server
         run: curl -sS https://webi.sh/caddy | sh
 
