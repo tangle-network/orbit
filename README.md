@@ -124,11 +124,13 @@ Options:
   --wethAddress               The address of the WETH contract          [string]
   --deployWeth                Whether to deploy WETH   [boolean] [default: true]
   --webbTokenName             The name of the webb token
-                                        [string] [default: "webbTNT-standalone"]
+                                        [string] [default: "Webb Wrapped Ether"]
   --webbTokenSymbol           The symbol of the webb token
-                                                   [string] [default: "webbTNT"]
+                                                  [string] [default: "webbWETH"]
   --allowWrappingNativeToken  Whether to allow wrapping native tokens into webb
                               tokens                   [boolean] [default: true]
+  --governor                  The Signature Bridge governor. Could be ETH addres
+                              s, Uncompressed or Compressed Public Key  [string]
 ```
 
 And here is an example of deploying a local bridge named webbWETH Bridge.

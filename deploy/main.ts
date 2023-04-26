@@ -7,6 +7,8 @@ import isCI from 'is-ci';
 import { hideBin } from 'yargs/helpers';
 import { ethers } from 'ethers';
 import * as dotenv from 'dotenv';
+import { ECPairFactory } from 'ecpair';
+import * as tinysecp from 'tiny-secp256k1';
 import {
   VBridge,
   TokenConfig,
@@ -92,6 +94,56 @@ async function deployWebbBridge(
   );
 }
 
+function ethAddressFromUncompressedPublicKey(publicKey: string): `0x${string}` {
+  const pubKeyHash = ethers.utils.keccak256(publicKey); // we hash it.
+  const address = ethers.utils.getAddress(`0x${pubKeyHash.slice(-40)}`); // take the last 20 bytes and convert it to an address.
+  return address as `0x${string}`;
+}
+
+function uncompressPublicKey(compressed: `0x${string}`): `0x${string}` {
+  const ECPair = ECPairFactory(tinysecp);
+  const dkgPubKey = ECPair.fromPublicKey(
+    Buffer.from(compressed.slice(2), 'hex'),
+    {
+      compressed: false,
+    }
+  ).publicKey.toString('hex');
+  // now we remove the `04` prefix byte and return it.
+  return `0x${dkgPubKey.slice(2)}`;
+}
+
+/**
+ * Computes the governor address from the givin value or returns the default governor address
+ * @param value The value to extract the governor address from
+ * this can be an Ethereum Address, a compressed public key or an uncompressed public key.
+ * @param defaultValue The default governor address
+ * @returns The governor address
+ **/
+export function extractGovernorAddressOrDefault(
+  value: string | undefined,
+  defaultValue: () => ReturnType<typeof extractGovernorAddressOrDefault>
+): `0x${string}` {
+  if (value && ethers.utils.isAddress(value)) {
+    return value as `0x${string}`; // Ethereum Address
+  }
+  // Compressed Public Key (0x + 33 bytes)
+  else if (value && value.startsWith('0x') && value.length === 66 + 2) {
+    return ethAddressFromUncompressedPublicKey(
+      uncompressPublicKey(value as `0x${string}`)
+    );
+  }
+  // Uncompressed Public Key (0x + 64 bytes)
+  else if (value && value.startsWith('0x') && value.length === 128 + 2) {
+    return ethAddressFromUncompressedPublicKey(value as `0x${string}`);
+  } else {
+    console.warn(
+      chalk`{yellow WARNING:} Invalid/Unknown governor address provided. Using default governor address.`,
+      value
+    );
+    return defaultValue();
+  }
+}
+
 /**
  * Returns the Vault mnemonic from the environment
  * @returns {string} The Vault mnemonic
@@ -110,6 +162,7 @@ type DeploymentConfig = {
     [chainId: number]: ethers.Wallet;
   };
   typedChainIds: number[];
+  vaultAddress: string;
   governorAddress: string;
   deployWeth: boolean;
   wethAddress?: string;
@@ -214,17 +267,17 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
 
     const tx1 = await fungibleTokenWrapper.grantRole(
       adminRole,
-      config.governorAddress
+      config.vaultAddress
     );
     await tx1.wait();
     const tx2 = await fungibleTokenWrapper.grantRole(
       minterRole,
-      config.governorAddress
+      config.vaultAddress
     );
     await tx2.wait();
     const tx3 = await fungibleTokenWrapper.grantRole(
       pauserRole,
-      config.governorAddress
+      config.vaultAddress
     );
     await tx3.wait();
 
@@ -294,12 +347,49 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
   };
 }
 
+/**
+ * Arguments for the deploy script
+ */
 export type Args = {
+  /**
+   * The address of the WETH contract
+   * @default The WETH contract will be deployed
+   * @example 0x1234567890123456789012345678901234567890
+   */
   wethAddress: string;
+  /**
+   * Whether to deploy the WETH contract
+   * @default true
+   * @example false
+   **/
   deployWeth: boolean;
+  /**
+   * The name of the Webb token
+   * @default Webb Wrapped Ether
+   * @example Webb Wrapped Ether
+   **/
   webbTokenName: string;
+  /**
+   * The symbol of the Webb token
+   * @default webbWETH
+   * @example webbWETH
+   **/
   webbTokenSymbol: string;
+  /**
+   * Whether to allow wrapping the native token
+   * @default true
+   * @example false
+   **/
   allowWrappingNativeToken: boolean;
+  /**
+   * The Signature Bridge governor:
+   * 1. Could be ETH address
+   * 2. Could be Uncompressed Public Key
+   * 3. Could be Compressed Public Key
+   * @default undefined
+   * @example 0x1234567890123456789012345678901234567890
+   **/
+  governor?: string;
 };
 
 /**
@@ -336,19 +426,25 @@ async function parseArgs(args: string[]): Promise<Args> {
         type: 'string',
         description: 'The name of the webb token',
         demandOption: false,
-        default: 'webbTNT-standalone',
+        default: 'Webb Wrapped Ether',
       },
       webbTokenSymbol: {
         type: 'string',
         description: 'The symbol of the webb token',
         demandOption: false,
-        default: 'webbTNT',
+        default: 'webbWETH',
       },
       allowWrappingNativeToken: {
         type: 'boolean',
         description: 'Whether to allow wrapping native tokens into webb tokens',
         demandOption: false,
         default: true,
+      },
+      governor: {
+        type: 'string',
+        description:
+          'The Signature Bridge governor. Could be ETH address, Uncompressed or Compressed Public Key',
+        demandOption: false,
       },
     })
     .parseAsync();
@@ -447,8 +543,12 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
 
     const config: DeploymentConfig = {
       deployers: R.zipObj(typedChainIds, deployerProviders),
-      governorAddress: vault.address,
+      governorAddress: extractGovernorAddressOrDefault(
+        args.governor ?? vault.address,
+        () => vault.address as `0x${string}`
+      ),
       typedChainIds,
+      vaultAddress: vault.address,
       ...args,
     };
     result = await deploy(config);
