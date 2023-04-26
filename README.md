@@ -131,6 +131,7 @@ Options:
                               tokens                   [boolean] [default: true]
   --governor                  The Signature Bridge governor. Could be ETH addres
                               s, Uncompressed or Compressed Public Key  [string]
+  --governorNonce             The nonce of the governor    [number] [default: 0]
 ```
 
 And here is an example of deploying a local bridge named webbWETH Bridge.
