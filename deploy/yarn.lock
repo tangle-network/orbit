@@ -3604,16 +3604,16 @@
     "@webb-tools/utils" "^0.4.2"
     ethers "5.7.0"
 
-"@webb-tools/anchors@^0.5.32":
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/@webb-tools/anchors/-/anchors-0.5.32.tgz#09be18bef91e95084bc595c2917ed0974e14ec56"
-  integrity sha512-NRGEAdpsf3EzHmcu/CXKVwkP/LjN/sd0aUsMGiffjQqWX7w4FoC+Uqu6e6lHWpYxsC8E8cHRvf1/CWuFbC95jg==
+"@webb-tools/anchors@^0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@webb-tools/anchors/-/anchors-0.5.36.tgz#41ddcab63c3bf7416472cd1de8fbf23ed70d5a7d"
+  integrity sha512-o+9lWHE9PfosKMKADKoI1NcO5+0ZAB2wdBJN8el0cytrOCkJYMu7q7c1DzbVWzmzKSHxD/YsRTyCVNS6V/SLMg==
   dependencies:
-    "@webb-tools/contracts" "^0.5.32"
-    "@webb-tools/interfaces" "^0.5.32"
+    "@webb-tools/contracts" "^0.5.36"
+    "@webb-tools/interfaces" "^0.5.36"
     "@webb-tools/sdk-core" "0.1.4-119"
     "@webb-tools/semaphore" "0.0.1-5"
-    "@webb-tools/utils" "^0.5.24"
+    "@webb-tools/utils" "^0.5.28"
     ethers "5.7.0"
     jssha "^3.2.0"
 
@@ -3695,17 +3695,17 @@
     "@webb-tools/utils" "^0.4.2"
     ethers "5.7.0"
 
-"@webb-tools/bridges@^0.5.32":
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/@webb-tools/bridges/-/bridges-0.5.32.tgz#432111e3a438129f29e0f028e02c3b124daf13ad"
-  integrity sha512-FkLYKboTitIcNLAnqjBAZ0SvKmi7duILohlBuox2mv4I4S34Nsuqt5Nr3daUHwwG5sRronO9hYIvBVdzLgz2Nw==
+"@webb-tools/bridges@^0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@webb-tools/bridges/-/bridges-0.5.36.tgz#b5a38c29f01c3ac9208078b1be944cfa1c6451bb"
+  integrity sha512-aK6hS4pHvPH9HzoF+uxlVbEvyHacelB6GQ3FXixUuJGHQf6OJJuEVXkPQlEybj753UNVZomKo03eClARZLQY6Q==
   dependencies:
-    "@webb-tools/anchors" "^0.5.32"
-    "@webb-tools/contracts" "^0.5.32"
-    "@webb-tools/interfaces" "^0.5.32"
+    "@webb-tools/anchors" "^0.5.36"
+    "@webb-tools/contracts" "^0.5.36"
+    "@webb-tools/interfaces" "^0.5.36"
     "@webb-tools/sdk-core" "0.1.4-119"
-    "@webb-tools/tokens" "^0.5.32"
-    "@webb-tools/utils" "^0.5.24"
+    "@webb-tools/tokens" "^0.5.36"
+    "@webb-tools/utils" "^0.5.28"
     ethers "5.7.0"
 
 "@webb-tools/contracts@^0.2.6", "@webb-tools/contracts@^0.2.7", "@webb-tools/contracts@^0.2.9":
@@ -3722,10 +3722,10 @@
   dependencies:
     ethers "5.7.0"
 
-"@webb-tools/contracts@^0.5.32":
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/@webb-tools/contracts/-/contracts-0.5.32.tgz#425baa0939a2ba583d5a6f73de5f6e7b932d6ef1"
-  integrity sha512-WdKZaAvWMIoSSiDsotHP/SRQUIbIL55DZDWtOAdxf1n8Y0EKYK0x71sZdfmOeLE/WsaucMN9UUWfLqkrszckSQ==
+"@webb-tools/contracts@^0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@webb-tools/contracts/-/contracts-0.5.36.tgz#7da3aba26d3f31f67f27dd65d1d05a4893bbed4e"
+  integrity sha512-OoswcpRtrSdoH/uL/kjaoUoPZpFO3xZzVS9xOu7IJfFOZZKSXg1Oadixcy+irwwxHxvj979WzEajK8jo2oUoEg==
   dependencies:
     "@nomiclabs/hardhat-waffle" "^2.0.3"
     "@openzeppelin/contracts" "^4.7.3"
@@ -3785,12 +3785,12 @@
     "@webb-tools/contracts" "^0.4.2"
     "@webb-tools/sdk-core" "0.1.4-113"
 
-"@webb-tools/interfaces@^0.5.32":
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/@webb-tools/interfaces/-/interfaces-0.5.32.tgz#6ca26f78ff4baba952a81970e0f572f0b8355c44"
-  integrity sha512-Czq6lauES0GIu/CXnOiSJm9qQ0CYwpevMc5jEjlH9MDQj04TYBzLPpfWbANkNT/W4iQzUY+71lCVRjPBeTOxXQ==
+"@webb-tools/interfaces@^0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@webb-tools/interfaces/-/interfaces-0.5.36.tgz#3484f18188d6f04f7a1eee8c085995f54271dfa9"
+  integrity sha512-Y+jF6g/F2ekGGfIHblq/Wk//v5P4AxmhDMTk/70RoCvnGTlnvXHDALWSRKcdvAA7YGvttbb19TVd0TWOeF46IA==
   dependencies:
-    "@webb-tools/contracts" "^0.5.32"
+    "@webb-tools/contracts" "^0.5.36"
     "@webb-tools/sdk-core" "0.1.4-119"
 
 "@webb-tools/protocol-solidity@0.2.6":
@@ -4201,15 +4201,15 @@
     "@webb-tools/utils" "^0.2.9"
     ethers "5.7.0"
 
-"@webb-tools/tokens@^0.5.32":
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/@webb-tools/tokens/-/tokens-0.5.32.tgz#31a25d7e4b99806492b1d9d79ceda5f156a97c7a"
-  integrity sha512-24gs9jMUDZajPeHb6sb8T2vJpCmKRaSBMv1A0MigViJt+quafI+r25nPOZf14/uNsY4M3abGbF919bB/AMvnZg==
+"@webb-tools/tokens@^0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@webb-tools/tokens/-/tokens-0.5.36.tgz#4f771a6517de0a3cad9210096d8ca54b7c6128f9"
+  integrity sha512-AU+xiPNNSxc62VaMLKl3fOo27GLSn2FqLatLCYnfBzIuMQXojaFGTIilghRyFUULHZjSTcEDkEpfq5rA3ztTmg==
   dependencies:
-    "@webb-tools/anchors" "^0.5.32"
-    "@webb-tools/contracts" "^0.5.32"
+    "@webb-tools/anchors" "^0.5.36"
+    "@webb-tools/contracts" "^0.5.36"
     "@webb-tools/sdk-core" "0.1.4-119"
-    "@webb-tools/utils" "^0.5.24"
+    "@webb-tools/utils" "^0.5.28"
     ethers "5.7.0"
 
 "@webb-tools/utils@0.2.6":
@@ -4244,10 +4244,10 @@
     "@webb-tools/sdk-core" "0.1.4-105"
     ethers "5.7.0"
 
-"@webb-tools/utils@^0.5.24":
-  version "0.5.24"
-  resolved "https://registry.yarnpkg.com/@webb-tools/utils/-/utils-0.5.24.tgz#1fc58d68f9d3b4dcd8ded124eef58bcd1008ef17"
-  integrity sha512-Yo/E2pMnQOibSMvgkJ9idPGFSw7BMspF26sw1QLCixVEvBa9uwi6XTp954jlto2v6GPcBwb1ev226ReGQ/VVSg==
+"@webb-tools/utils@^0.5.28":
+  version "0.5.28"
+  resolved "https://registry.yarnpkg.com/@webb-tools/utils/-/utils-0.5.28.tgz#d618634f186e6423a20fd412c21b39f3242629c8"
+  integrity sha512-LOegVOi53+lsefpitq9pLUilakbz7/drCVoaMcnh3AGJh5o2p9jr78Ce1MFgUkIaDUuH+BydOZt2zBrGwmOBmg==
   dependencies:
     "@webb-tools/sdk-core" "0.1.4-119"
     ethers "5.7.0"
@@ -4300,18 +4300,18 @@
     "@webb-tools/utils" "^0.2.9"
     ethers "5.7.0"
 
-"@webb-tools/vbridge@^0.5.32":
-  version "0.5.32"
-  resolved "https://registry.yarnpkg.com/@webb-tools/vbridge/-/vbridge-0.5.32.tgz#acbfcae7511ca272929ae5fd1a1247c7b8b60299"
-  integrity sha512-sweJdzq6pV2PxOdHysFN1jzkscRAaBpD9smaMgTa1f1hp4Ooww+ffAHs9Yr+RM68arNFHkdyVWA+PdMVjjWSIw==
+"@webb-tools/vbridge@^0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@webb-tools/vbridge/-/vbridge-0.5.36.tgz#ee443ef679b7a6eb9a7f8dfdfffd1014a2f23d7e"
+  integrity sha512-qrX+0IKtSbRswu+mgUMXQJnLFWDX144KLq0ytjakEcF5pn/fw9gH+iIeF56CnbcoBbn0IOWJDC0PB8Wj/SYO4w==
   dependencies:
-    "@webb-tools/anchors" "^0.5.32"
-    "@webb-tools/bridges" "^0.5.32"
-    "@webb-tools/contracts" "^0.5.32"
-    "@webb-tools/interfaces" "^0.5.32"
+    "@webb-tools/anchors" "^0.5.36"
+    "@webb-tools/bridges" "^0.5.36"
+    "@webb-tools/contracts" "^0.5.36"
+    "@webb-tools/interfaces" "^0.5.36"
     "@webb-tools/sdk-core" "0.1.4-119"
-    "@webb-tools/tokens" "^0.5.32"
-    "@webb-tools/utils" "^0.5.24"
+    "@webb-tools/tokens" "^0.5.36"
+    "@webb-tools/utils" "^0.5.28"
     ethers "5.7.0"
 
 "@webb-tools/wasm-utils@0.1.4-101":

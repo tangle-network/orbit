@@ -13,7 +13,7 @@ import {
   VBridge,
   TokenConfig,
   VBridgeInput,
-} from '@webb-tools/vbridge/lib/VBridge.js';
+} from '@webb-tools/vbridge/dist/VBridge.js';
 import { DeployerConfig, GovernorConfig } from '@webb-tools/interfaces';
 import { fetchComponentsFromFilePaths } from '@webb-tools/utils';
 import {
@@ -164,6 +164,7 @@ type DeploymentConfig = {
   typedChainIds: number[];
   vaultAddress: string;
   governorAddress: string;
+  governorNonce: number;
   deployWeth: boolean;
   wethAddress?: string;
   allowWrappingNativeToken: boolean;
@@ -220,7 +221,10 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
 
   const governorConfig: GovernorConfig = Object.keys(config.deployers).reduce(
     (acc, typedChainId) => {
-      acc[parseInt(typedChainId)] = config.governorAddress;
+      acc[parseInt(typedChainId)] = {
+        address: config.governorAddress,
+        nonce: config.governorNonce,
+      };
       return acc;
     },
     {} as GovernorConfig
@@ -390,6 +394,12 @@ export type Args = {
    * @example 0x1234567890123456789012345678901234567890
    **/
   governor?: string;
+  /**
+   * The nonce of the governor
+   * @default 0
+   * @example 1
+   **/
+  governorNonce: number;
 };
 
 /**
@@ -445,6 +455,12 @@ async function parseArgs(args: string[]): Promise<Args> {
         description:
           'The Signature Bridge governor. Could be ETH address, Uncompressed or Compressed Public Key',
         demandOption: false,
+      },
+      governorNonce: {
+        type: 'number',
+        description: 'The nonce of the governor',
+        demandOption: false,
+        default: 0,
       },
     })
     .parseAsync();
