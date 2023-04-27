@@ -2,7 +2,7 @@ import { env } from 'node:process';
 import * as dotenv from 'dotenv';
 import Chai, { expect } from 'chai';
 import ChaiAsPromised from 'chai-as-promised';
-import { Deployment, deployWithArgs } from '../main.js';
+import { type Deployment, deployWithArgs } from '../main.js';
 import { FungibleTokenWrapper__factory as FungibleTokenWrapperFactory } from '@webb-tools/contracts';
 import { ethers } from 'ethers';
 import isCI from 'is-ci';
