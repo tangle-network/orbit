@@ -115,9 +115,6 @@ yarn deploy --help
 You should see something like the following:
 
 ```bash
-❯ yarn deploy --help
-yarn run v1.22.19
-$ NODE_OPTIONS='--use-openssl-ca' ts-node main.ts --help
 Options:
   --help                      Show help                                [boolean]
   --version                   Show version number                      [boolean]
@@ -141,6 +138,53 @@ yarn deploy --deployWeth --allowWrappingNativeToken=false --webbTokenName webbWE
 ```
 
 This will deploy the smart contracts to the testnets.
+
+### Deploying on Tangle Network
+
+If you want to utilize the Tangle Network and the DKG as a governor for the deployed bridge, you will need to configure the following:
+
+- Whitelist ChainIds
+- Set Resource Ids
+- Add Relayers as proposers
+- Fund the relayers accounts
+- Update Native Asset Metadata (assetId `0`)
+- Register `webbtTNT` asset as a Poolshare over Native Asset
+- Create VAnchor with the `webbtTNT` asset.
+
+These steps could be done manually or using the following command:
+
+```bash
+yarn tangle --help
+```
+
+You should see something like the following:
+
+```bash
+Options:
+  --help                 Show help                                     [boolean]
+  --version              Show version number                           [boolean]
+  --wsEndpoint           The endpoint of the node
+                                       [string] [default: "ws://127.0.0.1:9944"]
+  --resourceIds          The resource ids                  [array] [default: []]
+  --proposers            The proposers native accounts     [array] [default: []]
+  --nativeAssetSymbol    The native asset symbol      [string] [default: "tTNT"]
+  --nativeAssetDecimals  The native asset decimals        [number] [default: 18]
+  --webbAssetName        The webb asset name      [string] [default: "webbtTNT"]
+  --webbAssetSymbol      The webb asset symbol    [string] [default: "webbtTNT"]
+  --webbAssetDecimals    The webb asset decimals          [number] [default: 18]
+  --maxEdges             The max edges of the vanchor      [number] [default: 7]
+  --depth                The depth of the vanchor         [number] [default: 30]
+  --registerWebbAsset    Register the webb asset      [boolean] [default: false]
+  --createVAnchor        Create the vanchor           [boolean] [default: false]
+```
+
+And here is an example of how you can use it:
+
+```bash
+yarn tangle --resourceIds 0x00000000000064ba293e654992a94f304b00e3ceb8fd0f7aa77301000000138a --resourceIds 0x00000000000064ba293e654992a94f304b00e3ceb8fd0f7aa773010000001389 --resourceIds 0x00000000000064ba293e654992a94f304b00e3ceb8fd0f7aa77301000000138b --proposers 5GbCrQqvKfv2CELiYYuLpovHZMgAvGEKRx3Yb7hfLL53xZ8s --proposers 5HQePQH5NrJvyhfEakr63sbdvJX8Rv5skvsoTptAjEPYEVNK --registerWebbAsset --createVAnchor
+```
+
+This command will automatically do the above steps for you.
 
 <h3 id="deploy"> Deploy with <a href="https://docker.com">Docker</a> ☄️</h3>
 

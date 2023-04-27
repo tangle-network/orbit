@@ -11,10 +11,10 @@ import { ECPairFactory } from 'ecpair';
 import * as tinysecp from 'tiny-secp256k1';
 import {
   VBridge,
-  TokenConfig,
-  VBridgeInput,
+  type TokenConfig,
+  type VBridgeInput,
 } from '@webb-tools/vbridge/dist/VBridge.js';
-import { DeployerConfig, GovernorConfig } from '@webb-tools/interfaces';
+import type { DeployerConfig, GovernorConfig } from '@webb-tools/interfaces';
 import { fetchComponentsFromFilePaths } from '@webb-tools/utils';
 import {
   ERC20__factory as ERC20Factory,
