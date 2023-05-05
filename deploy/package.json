@@ -20,6 +20,7 @@
     "ts:build": "tsc",
     "deploy": "NODE_OPTIONS='--use-openssl-ca' ts-node main.ts",
     "tangle": "NODE_OPTIONS='--use-openssl-ca' ts-node tangle.ts",
+    "faucet": "NODE_OPTIONS='--use-openssl-ca' ts-node faucet.ts",
     "test": "mocha"
   },
   "resolutions": {

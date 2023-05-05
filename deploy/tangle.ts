@@ -325,7 +325,7 @@ async function configureTangle(args: Args) {
   }));
 
   console.log(chalk`=> {green.bold Whitelist the chain ids}`);
-
+  const chainIdsSet = new Set<number>();
   for (const v of typedChainIds) {
     const maybeU32Value = await api.query.dkgProposals.chainNonces(
       makeTypedChainIdCodec(r, v.chainType, v.chainId)
@@ -335,10 +335,15 @@ async function configureTangle(args: Args) {
       console.log(
         chalk`[x] {yellow Chain ${v.chainId} is already whitelisted}`
       );
-    } else {
+    } else if (!chainIdsSet.has(v.chainId)) {
       const call = await whitelistChain(api, { typedChainId: v });
       calls.push(call);
       console.log(chalk`[+] {green Chain ${v.chainId} whitelisted}`);
+      chainIdsSet.add(v.chainId);
+    } else {
+      console.log(
+        chalk`[x] {yellow Chain ${v.chainId} is already whitelisted}`
+      );
     }
   }
 
