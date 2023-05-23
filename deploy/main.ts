@@ -476,13 +476,13 @@ export type Deployment = {
 
 export type DeploymentResult =
   | {
-      kind: 'Ok';
-      deployment: Deployment;
-    }
+    kind: 'Ok';
+    deployment: Deployment;
+  }
   | {
-      kind: 'Err';
-      error: string;
-    };
+    kind: 'Err';
+    error: string;
+  };
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
@@ -493,15 +493,15 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-        `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-        `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-        `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
-      ]
+      `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+    ]
     : [
-        `https://athena-testnet.${domain}`,
-        `https://hermes-testnet.${domain}`,
-        `https://demeter-testnet.${domain}`,
-      ];
+      `https://athena-testnet.${domain}`,
+      `https://hermes-testnet.${domain}`,
+      `https://demeter-testnet.${domain}`,
+    ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
