@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'test';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 module.exports = {
   loader: 'ts-node/esm',
   extensions: ['ts'],
@@ -10,5 +11,5 @@ module.exports = {
   retries: 0,
   parallel: true,
   'no-warnings': true,
-  'use-openssl-ca': true,
+  'use-openssl-ca': false,
 };
