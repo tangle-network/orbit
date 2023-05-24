@@ -9,9 +9,12 @@ import * as dotenv from 'dotenv';
 import { fetchComponentsFromFilePaths, hexToU8a } from '@webb-tools/utils';
 import { ethers } from 'ethers';
 import path from 'node:path';
-import { env } from 'node:process';
+import { env, exit } from 'node:process';
 import { fileURLToPath } from 'node:url';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 /**
  * Returns the Vault mnemonic from the environment
  * @returns {string} The Vault mnemonic
@@ -25,93 +28,146 @@ function getVaultMnemonic(): string {
   return maybeVaultMnemonic;
 }
 
-let providers: ethers.providers.JsonRpcProvider[];
-let vault: ethers.Wallet;
+/**
+ * Arguments for the deploy script
+ */
+export type Args = {
+  /**
+   * The address of the VAnchor contract
+   * @example 0x1234567890123456789012345678901234567890
+   */
+  contractAddress: string;
+  /**
+   * The amount of ETH to deposit
+   * @default 0.01 ETH
+   * @example 0.1 ETH
+   **/
+  amount: number;
+};
 
-dotenv.config({
-  path: '../.env',
-});
-vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
-const chainRpcUrls = [
-  `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-  `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-  `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
-];
+/**
+ * Parse the command line arguments
+ */
+async function parseArgs(args: string[]): Promise<Args> {
+  const parsed: Args = await yargs(args)
+    .options({
+      contractAddress: {
+        type: 'string',
+        description: 'The address of the VAnchor contract',
+        demandOption: true,
+        coerce: (arg) => {
+          if (arg && !ethers.utils.isAddress(arg)) {
+            throw new Error('Invalid Contract address');
+          } else {
+            return arg;
+          }
+        },
+      },
+      amount: {
+        type: 'number',
+        description: 'The amount of ETH to deposit',
+        demandOption: false,
+        default: 0.01,
+      },
+    })
+    .parseAsync();
+  return parsed;
+}
+// *** MAIN ***
+async function main() {
+  const args = await parseArgs(hideBin(process.argv));
+  // Load the environment variables
+  dotenv.config({
+    path: path.resolve(dirname, '../.env'),
+  });
 
-providers = chainRpcUrls.map(
-  (url) => new ethers.providers.JsonRpcProvider(url)
-);
-const zeroTokenAddress = '0x0000000000000000000000000000000000000000';
-const dirname = path.dirname(fileURLToPath(import.meta.url));
-const provider = providers[0];
-const vaultSender = vault.connect(provider);
-const testAccount = ethers.Wallet.createRandom().connect(provider);
-const tx1 = await vaultSender.sendTransaction({
-  to: testAccount.address,
-  value: ethers.utils.parseEther('1'),
-});
-await tx1.wait();
+  const vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
+  const chainRpcUrls = [
+    `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+    `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+    `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+  ];
 
-const zkComponentsSmall = await fetchComponentsFromFilePaths(
-  path.resolve(
-    dirname,
-    'fixtures/solidity-fixtures/vanchor_2/8/poseidon_vanchor_2_8.wasm'
-  ),
-  path.resolve(
-    dirname,
-    'fixtures/solidity-fixtures/vanchor_2/8/witness_calculator.cjs'
-  ),
-  path.resolve(
-    dirname,
-    'fixtures/solidity-fixtures/vanchor_2/8/circuit_final.zkey'
-  )
-);
+  const providers = chainRpcUrls.map(
+    (url) => new ethers.providers.JsonRpcProvider(url)
+  );
+  const zeroTokenAddress = '0x0000000000000000000000000000000000000000';
+  const provider = providers[0];
+  const vaultSender = vault.connect(provider);
+  const testAccount = ethers.Wallet.createRandom().connect(provider);
+  const tx1 = await vaultSender.sendTransaction({
+    to: testAccount.address,
+    value: ethers.utils.parseEther(args.amount.toString()),
+  });
+  await tx1.wait();
 
-const zkComponentsLarge = await fetchComponentsFromFilePaths(
-  path.resolve(
-    dirname,
-    'fixtures/solidity-fixtures/vanchor_16/8/poseidon_vanchor_16_8.wasm'
-  ),
-  path.resolve(
-    dirname,
-    'fixtures/solidity-fixtures/vanchor_16/8/witness_calculator.cjs'
-  ),
-  path.resolve(
-    dirname,
-    'fixtures/solidity-fixtures/vanchor_16/8/circuit_final.zkey'
-  )
-);
+  const zkComponentsSmall = await fetchComponentsFromFilePaths(
+    path.resolve(
+      dirname,
+      'fixtures/solidity-fixtures/vanchor_2/8/poseidon_vanchor_2_8.wasm'
+    ),
+    path.resolve(
+      dirname,
+      'fixtures/solidity-fixtures/vanchor_2/8/witness_calculator.cjs'
+    ),
+    path.resolve(
+      dirname,
+      'fixtures/solidity-fixtures/vanchor_2/8/circuit_final.zkey'
+    )
+  );
 
-const vanchor = await VAnchor.connect(
-  '0x3285e3fda482003ca2540a101a9ced3cb2d8fb99',
-  zkComponentsSmall,
-  zkComponentsLarge,
-  testAccount
-);
+  const zkComponentsLarge = await fetchComponentsFromFilePaths(
+    path.resolve(
+      dirname,
+      'fixtures/solidity-fixtures/vanchor_16/8/poseidon_vanchor_16_8.wasm'
+    ),
+    path.resolve(
+      dirname,
+      'fixtures/solidity-fixtures/vanchor_16/8/witness_calculator.cjs'
+    ),
+    path.resolve(
+      dirname,
+      'fixtures/solidity-fixtures/vanchor_16/8/circuit_final.zkey'
+    )
+  );
 
-const originChainId = calculateTypedChainId(ChainType.EVM, 5001);
-const chainId = calculateTypedChainId(ChainType.EVM, 5002);
-const depositUtxo = await CircomUtxo.generateUtxo({
-  curve: 'Bn254',
-  backend: 'Circom',
-  amount: ethers.utils.parseEther('0.1').toHexString(),
-  originChainId: originChainId.toString(),
-  chainId: chainId.toString(),
-  keypair: new Keypair(),
-});
+  const vanchor = await VAnchor.connect(
+    args.contractAddress,
+    zkComponentsSmall,
+    zkComponentsLarge,
+    testAccount
+  );
 
-const leaves = vanchor.tree.elements().map((el) => hexToU8a(el.toHexString()));
+  const originChainId = calculateTypedChainId(ChainType.EVM, 5001);
+  const chainId = calculateTypedChainId(ChainType.EVM, 5002);
+  const depositUtxo = await CircomUtxo.generateUtxo({
+    curve: 'Bn254',
+    backend: 'Circom',
+    amount: ethers.utils.parseEther(args.amount.toString()).toHexString(),
+    originChainId: originChainId.toString(),
+    chainId: chainId.toString(),
+    keypair: new Keypair(),
+  });
 
-const res = await vanchor.transact(
-  [],
-  [depositUtxo],
-  0,
-  0,
-  '0',
-  '0',
-  zeroTokenAddress,
-  {
-    [originChainId]: leaves,
-  }
-);
-console.log(res);
+  const leaves = vanchor.tree
+    .elements()
+    .map((el) => hexToU8a(el.toHexString()));
+
+  const res = await vanchor.transact(
+    [],
+    [depositUtxo],
+    0,
+    0,
+    '0',
+    '0',
+    zeroTokenAddress,
+    {
+      [originChainId]: leaves,
+    }
+  );
+  console.log('TxHash:', res.transactionHash);
+  // Exit the script
+  exit(0);
+}
+
+await main();
