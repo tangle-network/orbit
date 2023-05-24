@@ -1,5 +1,6 @@
 import { env, exit } from 'node:process';
 import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import yargs from 'yargs';
@@ -340,6 +341,22 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
   assert.ok(bridgeAddress!, 'Bridge address not found');
   assert.ok(anchorAddress!, 'Anchor address not found');
   assert.ok(webbTokenAddress!, 'Webb token address not found');
+
+  console.log(chalk`{bold Generating Relayer Config}`);
+  const template = fs.readFileSync(
+    path.resolve(dirname, '../config/orbit.toml.tmpl'),
+    {
+      encoding: 'utf-8',
+    }
+  );
+
+  // Replace the template variables with the actual values
+  const configFile = template
+    .replace(/BRIDGE_ADDRESS/g, bridgeAddress)
+    .replace(/VANCHOR_ADDRESS/g, anchorAddress);
+  // Write the config file
+  fs.writeFileSync(path.resolve(dirname, '../config/orbit.toml'), configFile);
+
   return {
     kind: 'Ok',
     deployment: {
@@ -476,13 +493,13 @@ export type Deployment = {
 
 export type DeploymentResult =
   | {
-      kind: 'Ok';
-      deployment: Deployment;
-    }
+    kind: 'Ok';
+    deployment: Deployment;
+  }
   | {
-      kind: 'Err';
-      error: string;
-    };
+    kind: 'Err';
+    error: string;
+  };
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
@@ -493,15 +510,15 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-        `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-        `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-        `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
-      ]
+      `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+    ]
     : [
-        `https://athena-testnet.${domain}`,
-        `https://hermes-testnet.${domain}`,
-        `https://demeter-testnet.${domain}`,
-      ];
+      `https://athena-testnet.${domain}`,
+      `https://hermes-testnet.${domain}`,
+      `https://demeter-testnet.${domain}`,
+    ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -592,6 +609,7 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(
     chalk`Funds sent back to Vault wallet: {blue.bold ${vault.address}}`
   );
+
   return result;
 }
 
