@@ -1,0 +1,118 @@
+[features]
+governance-relay = true
+data-query = true
+private-tx-relay = true
+
+[assets]
+tTNT = { name = "Test Tangle Token", decimals = 18, price = 10 }
+TNT = { name = "Tangle Token", decimals = 18, price = 10 }
+
+[evm.athena]
+name = "athena"
+http-endpoint = "$ATHENA_HTTP_URL"
+ws-endpoint = "$ATHENA_WS_URL"
+explorer = "http://athena-explorer.localhost"
+chain-id = 5001
+block-confirmations = 0
+private-key = "$ATHENA_TESTNET_PRIVATE_KEY"
+enabled = true
+
+[[evm.athena.contracts]]
+contract = "VAnchor"
+address = "VANCHOR_ADDRESS"
+deployed-at = 1
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+withdraw-config = { withdraw-fee-percentage = 0, withdraw-gaslimit = "0x350000" }
+linked-anchors = [
+  { type = "Evm", chain = "hermes", chain-id = 5002, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "demeter", chain-id = 5003, address = "VANCHOR_ADDRESS" },
+]
+smart-anchor-updates = { enabled = true, max-time-delay = 300, min-time-delay = 30 }
+proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY" }
+# proposal-signing-backend = { type = "DKGNode", chain-id = 1080 }
+
+[[evm.athena.contracts]]
+contract = "SignatureBridge"
+address = "BRIDGE_ADDRESS"
+deployed-at = 1
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+
+[evm.hermes]
+name = "hermes"
+http-endpoint = "$HERMES_HTTP_URL"
+ws-endpoint = "$HERMES_WS_URL"
+explorer = "http://hermes-explorer.localhost"
+chain-id = 5002
+block-confirmations = 0
+private-key = "$HERMES_TESTNET_PRIVATE_KEY"
+enabled = true
+
+[[evm.hermes.contracts]]
+contract = "VAnchor"
+address = "VANCHOR_ADDRESS"
+deployed-at = 1
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+withdraw-config = { withdraw-fee-percentage = 0, withdraw-gaslimit = "0x350000" }
+linked-anchors = [
+  { type = "Evm", chain = "athena", chain-id = 5001, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "demeter", chain-id = 5003, address = "VANCHOR_ADDRESS" },
+]
+smart-anchor-updates = { enabled = true, max-time-delay = 300, min-time-delay = 30 }
+proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY" }
+# proposal-signing-backend = { type = "DKGNode", chain-id = 1080 }
+
+[[evm.hermes.contracts]]
+contract = "SignatureBridge"
+address = "BRIDGE_ADDRESS"
+deployed-at = 1
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+
+[evm.demeter]
+name = "demeter"
+http-endpoint = "$DEMETER_HTTP_URL"
+ws-endpoint = "$DEMETER_WS_URL"
+explorer = "http://demeter-explorer.localhost"
+chain-id = 5003
+block-confirmations = 0
+private-key = "$DEMETER_TESTNET_PRIVATE_KEY"
+enabled = true
+
+[[evm.demeter.contracts]]
+contract = "VAnchor"
+address = "VANCHOR_ADDRESS"
+deployed-at = 1
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+withdraw-config = { withdraw-fee-percentage = 0, withdraw-gaslimit = "0x350000" }
+linked-anchors = [
+  { type = "Evm", chain = "athena", chain-id = 5001, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "hermes", chain-id = 5002, address = "VANCHOR_ADDRESS" },
+]
+smart-anchor-updates = { enabled = true, max-time-delay = 300, min-time-delay = 30 }
+proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY" }
+# proposal-signing-backend = { type = "DKGNode", chain-id = 1080 }
+
+
+[[evm.demeter.contracts]]
+contract = "SignatureBridge"
+address = "BRIDGE_ADDRESS"
+deployed-at = 1
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+
+[substrate.tangle]
+name = "tangle"
+enabled = false
+http-endpoint = "$TANGLE_HTTP_URL"
+ws-endpoint = "$TANGLE_WSS_URL"
+runtime = "DKG"
+suri = "$TANGLE_WEBB_RELAYER_SURI"
+chain-id = "1080"
+
+[[substrate.tangle.pallets]]
+pallet = "DKG"
+events-watcher = { enabled = true, polling-interval = 6000, print-progress-interval = 12000, sync-blocks-from = 100 }
+
+[[substrate.tangle.pallets]]
+pallet = "DKGProposalHandler"
+events-watcher = { enabled = true, polling-interval = 6000, print-progress-interval = 12000, sync-blocks-from = 100 }
+
+# vi: ft=toml

@@ -18,9 +18,10 @@
     "format": "prettier --write '**/*.{ts,js,yml}'",
     "ts:check": "tsc --noEmit",
     "ts:build": "tsc",
-    "deploy": "NODE_OPTIONS='--use-openssl-ca' ts-node main.ts",
-    "tangle": "NODE_OPTIONS='--use-openssl-ca' ts-node tangle.ts",
-    "faucet": "NODE_OPTIONS='--use-openssl-ca' ts-node faucet.ts",
+    "deploy": "ts-node main.ts",
+    "tangle": "ts-node tangle.ts",
+    "faucet": "ts-node faucet.ts",
+    "deposit": "ts-node deposit.ts",
     "test": "mocha"
   },
   "resolutions": {

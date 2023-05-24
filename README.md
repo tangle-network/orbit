@@ -194,6 +194,25 @@ You can also deploy the testnets to a remote server using Docker. To do so, you 
 docker compose up -d
 ```
 
+### Running with a Local Relayer
+
+The Deployment script also generates `orbit.toml` file that could be used with the [webb relayer](https://github.com/webb-tools/relayer)
+if you have it locally, you can also use it to connect to the running chains by running the following command:
+
+```bash
+webb-relayer -vvv --tmp -c ./config
+```
+
+### Cleanup
+
+To clean up everything and start over, you can executed the following commands:
+
+```bash
+docker compose down -v
+
+sudo rm -rf {logs,data}
+```
+
 ### Deploying Smart Contracts
 
 For the already deployed smart contracts on the testnets, refer to the [DEPLOYMENTS.md](./DEPLOYMENTS.md) file.
