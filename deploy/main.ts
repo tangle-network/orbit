@@ -19,6 +19,7 @@ import type { DeployerConfig, GovernorConfig } from '@webb-tools/interfaces';
 import { fetchComponentsFromFilePaths } from '@webb-tools/utils';
 import {
   ERC20__factory as ERC20Factory,
+  SignatureBridge__factory as SignatureBridgeFactory,
   FungibleTokenWrapper__factory as FungibleTokenWrapperFactory,
 } from '@webb-tools/contracts';
 import {
@@ -172,6 +173,65 @@ type DeploymentConfig = {
   webbTokenName: string;
   webbTokenSymbol: string;
 };
+
+async function transferOwneripOfBridge(
+  args: TransferOwnershipArgs
+): Promise<void> {
+  console.log(chalk`{bold Starting transfer ownership script...}`);
+  const vaultMnemonic = getVaultMnemonic();
+  const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
+  const domain = process.env.DOMAIN ?? 'localhost';
+  const chainRpcUrls = isCI
+    ? [
+      `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+    ]
+    : [
+      `https://athena-testnet.${domain}`,
+      `https://hermes-testnet.${domain}`,
+      `https://demeter-testnet.${domain}`,
+    ];
+
+  const providers = chainRpcUrls.map(
+    (url) => new ethers.providers.JsonRpcProvider(url)
+  );
+
+  console.log(chalk`{dim Checking connection to providers...}`);
+  for (const provider of providers) {
+    console.log(
+      chalk`{dim Checking connection to {blue ${provider.connection.url}}}`
+    );
+    const network = await provider.getNetwork();
+    console.log(chalk`{dim.green Connected to {blue ${network.chainId}}}`);
+  }
+  const vaultProviders = providers.map((provider) => vault.connect(provider));
+  for (const provider of vaultProviders) {
+    const sigBridge = SignatureBridgeFactory.connect(
+      args.contractAddress,
+      provider
+    );
+    const governor = await sigBridge.governor();
+    if (governor === args.governor) {
+      const network = await provider.provider.getNetwork();
+      console.log(
+        chalk`{bold Requested Governor is already set for chain {blue ${network.chainId}}}`
+      );
+      continue;
+    }
+    // transfer ownership
+    const tx = await sigBridge.transferOwnership(
+      args.governor,
+      args.governorNonce
+    );
+    await tx.wait();
+    const network = await provider.provider.getNetwork();
+    console.log(
+      chalk`{bold Transferred ownership of Bridge on chain {blue ${network.chainId}}}`
+    );
+  }
+  exit(0);
+}
 
 async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
   const tokenAddresses: string[] = [];
@@ -368,6 +428,28 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
   };
 }
 
+export type TransferOwnershipArgs = {
+  /**
+   * The address of the Signature Bridge contract
+   * @example 0x1234567890123456789012345678901234567890
+   */
+  contractAddress: string;
+  /**
+   * The Signature Bridge governor:
+   * 1. Could be ETH address
+   * 2. Could be Uncompressed Public Key
+   * 3. Could be Compressed Public Key
+   * @example 0x1234567890123456789012345678901234567890
+   **/
+  governor: string;
+  /**
+   * The nonce of the governor
+   * @default 0
+   * @example 1
+   **/
+  governorNonce: number;
+};
+
 /**
  * Arguments for the deploy script
  */
@@ -428,6 +510,40 @@ export type Args = {
  */
 async function parseArgs(args: string[]): Promise<Args> {
   const parsed: Args = await yargs(args)
+    .command<TransferOwnershipArgs>(
+      'transfer-ownership',
+      'Transfer ownership of existing the bridge',
+      (yargs) =>
+        yargs.options({
+          contractAddress: {
+            type: 'string',
+            description: 'The address of the Signature Bridge contract',
+            demandOption: true,
+            coerce: (arg) => {
+              if (arg && !ethers.utils.isAddress(arg)) {
+                throw new Error('Invalid contract address');
+              } else {
+                return arg;
+              }
+            },
+          },
+          governor: {
+            type: 'string',
+            description:
+              'The Signature Bridge governor. Could be ETH address, Uncompressed or Compressed Public Key',
+            demandOption: true,
+          },
+          governorNonce: {
+            type: 'number',
+            description: 'The nonce of the governor',
+            demandOption: false,
+            default: 0,
+          },
+        }),
+      async (argv) => {
+        await transferOwneripOfBridge(argv);
+      }
+    )
     .options({
       wethAddress: {
         type: 'string',
@@ -493,13 +609,13 @@ export type Deployment = {
 
 export type DeploymentResult =
   | {
-      kind: 'Ok';
-      deployment: Deployment;
-    }
+    kind: 'Ok';
+    deployment: Deployment;
+  }
   | {
-      kind: 'Err';
-      error: string;
-    };
+    kind: 'Err';
+    error: string;
+  };
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
@@ -510,15 +626,15 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-        `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-        `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-        `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
-      ]
+      `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+    ]
     : [
-        `https://athena-testnet.${domain}`,
-        `https://hermes-testnet.${domain}`,
-        `https://demeter-testnet.${domain}`,
-      ];
+      `https://athena-testnet.${domain}`,
+      `https://hermes-testnet.${domain}`,
+      `https://demeter-testnet.${domain}`,
+    ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -615,11 +731,11 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
 
 // *** MAIN ***
 async function main() {
-  const args = await parseArgs(hideBin(process.argv));
   // Load the environment variables
   dotenv.config({
     path: path.resolve(dirname, '../.env'),
   });
+  const args = await parseArgs(hideBin(process.argv));
   await deployWithArgs(args);
   // Exit the script
   exit(0);
