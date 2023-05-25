@@ -139,6 +139,14 @@ yarn deploy --deployWeth --allowWrappingNativeToken=false --webbTokenName webbWE
 
 This will deploy the smart contracts to the testnets.
 
+### Transfer the Ownership of Existing Signature Bridge
+
+There is a sub-command for transferring the ownership of the Bridge after the deployment.
+
+```bash
+yarn deploy transfer-ownership --contractAddress <CONTRACT> --governor <ADDRESS> --governorNonce 0
+```
+
 ### Deploying on Tangle Network
 
 If you want to utilize the Tangle Network and the DKG as a governor for the deployed bridge, you will need to configure the following:
