@@ -18,6 +18,29 @@
         "type": "github"
       }
     },
+    "foundry": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1685869753,
+        "narHash": "sha256-QtCsNKUaHCsDMborolLRcMimgzif7FmwQyi3Zn0J1SM=",
+        "owner": "shazow",
+        "repo": "foundry.nix",
+        "rev": "bbb5e0fe3d921120555a1dfe5b1b74112e74cdb3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "shazow",
+        "repo": "foundry.nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1683082554,
@@ -37,6 +60,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "foundry": "foundry",
         "nixpkgs": "nixpkgs"
       }
     },

@@ -79,15 +79,15 @@ async function runFaucet(args: Args): Promise<void> {
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-        `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-        `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-        `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
-      ]
+      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+    ]
     : [
-        `https://athena-testnet.${domain}`,
-        `https://hermes-testnet.${domain}`,
-        `https://demeter-testnet.${domain}`,
-      ];
+      `https://athena-testnet.${domain}`,
+      `https://hermes-testnet.${domain}`,
+      `https://demeter-testnet.${domain}`,
+    ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -137,9 +137,8 @@ async function runFaucet(args: Args): Promise<void> {
     console.log(
       chalk`{bold Minting {blue.bold ${ethers.utils.formatEther(
         amount
-      )}} tokens to {blue.bold ${recipient}} on {green.bold ${
-        network.chainId
-      }}}`
+      )}} tokens to {blue.bold ${recipient}} on {green.bold ${network.chainId
+        }}}`
     );
     return tx.wait();
   };
