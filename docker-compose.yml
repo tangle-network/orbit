@@ -11,6 +11,11 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "trust"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
   sig-provider:
     platform: linux/x86_64
     image: ghcr.io/blockscout/sig-provider:${SIG_PROVIDER_DOCKER_TAG:-main}
@@ -19,6 +24,11 @@ services:
     container_name: "sig-provider"
     ports:
       - 8151:8050
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
   smart-contract-verifier:
     platform: linux/x86_64
     image: ghcr.io/blockscout/smart-contract-verifier:${SMART_CONTRACT_VERIFIER_DOCKER_TAG:-main}
@@ -27,6 +37,12 @@ services:
     container_name: "smart-contract-verifier"
     ports:
       - 8150:8050
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
   visualizer:
     platform: linux/x86_64
     image: ghcr.io/blockscout/visualizer:${VISUALIZER_DOCKER_TAG:-latest}
@@ -35,22 +51,29 @@ services:
     container_name: "visualizer"
     ports:
       - 8152:8050
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
 
   caddy:
     image: caddy:alpine
     container_name: caddy
     restart: unless-stopped
     env_file: .env
-    environment:
-      CADDY_ADMIN: "0.0.0.0:2019"
     ports:
       - "80:80"
       - "443:443"
-      - "2019:2019"
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
       - ./data/caddy:/data
       - ./data/caddy_config:/config
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
 
   athena_blockscout:
     depends_on:
@@ -76,12 +99,17 @@ services:
       BLOCKSCOUT_HOST: "athena-explorer.${DOMAIN}"
     volumes:
       - ./logs/athena_blocksout/:/app/logs/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
 
   athena_chain:
     image: trufflesuite/ganache:latest
     container_name: athena-chain
     ports:
-      - ${ATHENA_CHAIN_ID}:8545
+      - ${ATHENA_CHAIN_PORT}:8545
     volumes:
       - ./data/athena_chain:/data
     env_file:
@@ -92,8 +120,13 @@ services:
       - "--miner.defaultGasPrice=5000000000" # 5 gwei
       - "--wallet.mnemonic=${MNEMONIC}"
       - "--wallet.defaultBalance=10000" # 10,000 ETH
-      - "--logging.debug=true"
-      - "--logging.verbose=true"
+      - "--logging.debug=false"
+      - "--logging.verbose=false"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
   hermes_blockscout:
     depends_on:
       - db
@@ -119,11 +152,17 @@ services:
     volumes:
       - ./logs/hermes_blocksout:/app/logs/
 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
   hermes_chain:
     image: trufflesuite/ganache:latest
     container_name: hermes-chain
     ports:
-      - ${HERMES_CHAIN_ID}:8545
+      - ${HERMES_CHAIN_PORT}:8545
     volumes:
       - ./data/hermes_chain:/data
     env_file:
@@ -134,8 +173,13 @@ services:
       - "--miner.defaultGasPrice=5000000000" # 5 gwei
       - "--wallet.mnemonic=${MNEMONIC}"
       - "--wallet.defaultBalance=10000" # 10,000 ETH
-      - "--logging.debug=true"
-      - "--logging.verbose=true"
+      - "--logging.debug=false"
+      - "--logging.verbose=false"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
 
   demeter_blockscout:
     depends_on:
@@ -161,12 +205,17 @@ services:
       BLOCKSCOUT_HOST: "demeter-explorer.${DOMAIN}"
     volumes:
       - ./logs/demeter_blocksout:/app/logs/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
 
   demeter_chain:
     image: trufflesuite/ganache:latest
     container_name: demeter-chain
     ports:
-      - ${DEMETER_CHAIN_ID}:8545
+      - ${DEMETER_CHAIN_PORT}:8545
     volumes:
       - ./data/demeter_chain:/data
     env_file:
@@ -177,5 +226,10 @@ services:
       - "--miner.defaultGasPrice=5000000000" # 5 gwei
       - "--wallet.mnemonic=${MNEMONIC}"
       - "--wallet.defaultBalance=10000" # 10,000 ETH
-      - "--logging.debug=true"
-      - "--logging.verbose=true"
+      - "--logging.debug=false"
+      - "--logging.verbose=false"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
