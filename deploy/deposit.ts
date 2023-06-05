@@ -83,9 +83,9 @@ async function main() {
 
   const vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
   const chainRpcUrls = [
-    `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-    `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-    `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
+    `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
   ];
 
   const providers = chainRpcUrls.map(

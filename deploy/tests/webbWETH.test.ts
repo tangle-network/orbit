@@ -50,15 +50,15 @@ describe('webbWETH', async () => {
     const domain = env.DOMAIN ?? 'localhost';
     const chainRpcUrls = isCI
       ? [
-          `http://127.0.0.1:${env.ATHENA_CHAIN_ID}`,
-          `http://127.0.0.1:${env.HERMES_CHAIN_ID}`,
-          `http://127.0.0.1:${env.DEMETER_CHAIN_ID}`,
-        ]
+        `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+        `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+        `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+      ]
       : [
-          `https://athena-testnet.${domain}`,
-          `https://hermes-testnet.${domain}`,
-          `https://demeter-testnet.${domain}`,
-        ];
+        `https://athena-testnet.${domain}`,
+        `https://hermes-testnet.${domain}`,
+        `https://demeter-testnet.${domain}`,
+      ];
 
     providers = chainRpcUrls.map(
       (url) => new ethers.providers.JsonRpcProvider(url)
