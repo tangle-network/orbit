@@ -12,7 +12,7 @@
 	# by uncommenting the line below
 	#
 	# auto_https off
-	admin 0.0.0.0:2019
+	# admin 0.0.0.0:2019
 }
 
 athena-testnet.{$DOMAIN} {

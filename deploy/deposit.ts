@@ -138,8 +138,10 @@ async function main() {
     testAccount
   );
 
-  const originChainId = calculateTypedChainId(ChainType.EVM, 5001);
-  const chainId = calculateTypedChainId(ChainType.EVM, 5002);
+  const ATHENA_CHAIN_ID = parseInt(env.ATHENA_CHAIN_ID!);
+  const HERMES_CHAIN_ID = parseInt(env.HERMES_CHAIN_ID!);
+  const originChainId = calculateTypedChainId(ChainType.EVM, ATHENA_CHAIN_ID);
+  const chainId = calculateTypedChainId(ChainType.EVM, HERMES_CHAIN_ID);
   const depositUtxo = await CircomUtxo.generateUtxo({
     curve: 'Bn254',
     backend: 'Circom',
