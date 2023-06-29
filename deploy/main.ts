@@ -174,7 +174,7 @@ type DeploymentConfig = {
   webbTokenSymbol: string;
 };
 
-async function transferOwneripOfBridge(
+async function transferOwnershipOfBridge(
   args: TransferOwnershipArgs
 ): Promise<void> {
   console.log(chalk`{bold Starting transfer ownership script...}`);
@@ -541,7 +541,7 @@ async function parseArgs(args: string[]): Promise<Args> {
           },
         }),
       async (argv) => {
-        await transferOwneripOfBridge(argv);
+        await transferOwnershipOfBridge(argv);
       }
     )
     .options({
