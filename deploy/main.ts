@@ -623,18 +623,11 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
   // For Deployment, we create a new dummy wallet and use it to deploy the bridge
   const deployer = ethers.Wallet.createRandom();
-  const domain = process.env.DOMAIN ?? 'localhost';
-  const chainRpcUrls = isCI
-    ? [
-      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    ]
-    : [
-      `https://athena-testnet.${domain}`,
-      `https://hermes-testnet.${domain}`,
-      `https://demeter-testnet.${domain}`,
-    ];
+  const chainRpcUrls = [
+    `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+  ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
