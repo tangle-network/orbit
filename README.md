@@ -78,6 +78,10 @@ cp .env.example .env
 
 Open the `.env` file in your editor and change what it is needed, usually they are the first section of the file.
 
+**Important:** If this is not used for local development, please: 
+- Comment or remove port `2019:2019` of `caddy` in `docker-compose.yml`
+- Comment or remove `admin 0.0.0.0:2019` in `Caddyfile`
+
 then, once done you can run the following command:
 
 ```bash
