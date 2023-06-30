@@ -1,7 +1,7 @@
 version: "3.5"
 
 networks:
-  webb_orbit:
+  webb:
     driver: bridge
 
 services:
@@ -15,7 +15,7 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_HOST_AUTH_METHOD: "trust"
     networks:
-      - webb_orbit
+      - webb
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     logging:
@@ -31,7 +31,7 @@ services:
     restart: always
     container_name: "sig-provider"
     networks:
-      - webb_orbit
+      - webb
     ports:
       - 8151:8050
     logging:
@@ -45,7 +45,7 @@ services:
     image: ghcr.io/blockscout/smart-contract-verifier:${SMART_CONTRACT_VERIFIER_DOCKER_TAG:-main}
     pull_policy: always
     networks:
-      - webb_orbit
+      - webb
     restart: always
     container_name: "smart-contract-verifier"
     ports:
@@ -63,7 +63,7 @@ services:
     restart: always
     container_name: "visualizer"
     networks:
-      - webb_orbit
+      - webb
     ports:
       - 8152:8050
     logging:
@@ -77,7 +77,7 @@ services:
     container_name: caddy
     restart: unless-stopped
     networks:
-      - webb_orbit
+      - webb
     env_file: .env
     ports:
       - "80:80"
@@ -106,7 +106,7 @@ services:
       - db:database
     command: bash -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
     networks:
-      - webb_orbit
+      - webb
     env_file:
       - .env
     environment:
@@ -133,7 +133,7 @@ services:
     volumes:
       - ./data/athena_chain:/data
     networks:
-      - webb_orbit
+      - webb
     env_file:
       - .env
     command:
@@ -162,7 +162,7 @@ services:
       - db:database
     command: bash -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
     networks:
-      - webb_orbit
+      - webb
     env_file:
       - .env
     environment:
@@ -190,7 +190,7 @@ services:
     volumes:
       - ./data/hermes_chain:/data
     networks:
-      - webb_orbit
+      - webb
     env_file:
       - .env
     command:
@@ -215,7 +215,7 @@ services:
     pull_policy: always
     restart: always
     networks:
-      - webb_orbit
+      - webb
     stop_grace_period: 5m
     container_name: "demeter-blockscout"
     links:
@@ -247,7 +247,7 @@ services:
     volumes:
       - ./data/demeter_chain:/data
     networks:
-      - webb_orbit
+      - webb
     env_file:
       - .env
     command:
