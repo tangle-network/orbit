@@ -65,6 +65,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      # - "2019:2019"
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
       - ./data/caddy:/data

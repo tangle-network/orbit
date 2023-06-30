@@ -78,6 +78,12 @@ cp .env.example .env
 
 Open the `.env` file in your editor and change what it is needed, usually they are the first section of the file.
 
+For local development update the following configuration for the caddy
+
+- Update administrative endpoint to admin 0.0.0.0:2019 in `Caddyfile`
+- Expose port 2019 of caddy in `docker-compose.yml`
+
+
 then, once done you can run the following command:
 
 ```bash
