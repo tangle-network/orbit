@@ -6,7 +6,6 @@ import * as dotenv from 'dotenv';
 import { fileURLToPath } from 'node:url';
 import chalk from 'chalk';
 import { ethers } from 'ethers';
-import isCI from 'is-ci';
 import * as R from 'ramda';
 import {
   FungibleTokenWrapper__factory as FungibleTokenWrapperFactory,
@@ -76,18 +75,11 @@ async function runFaucet(args: Args): Promise<void> {
   console.log(chalk`{bold Starting faucet script...}`);
   const vaultMnemonic = getVaultMnemonic();
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
-  const domain = process.env.DOMAIN ?? 'localhost';
-  const chainRpcUrls = isCI
-    ? [
-      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    ]
-    : [
-      `https://athena-testnet.${domain}`,
-      `https://hermes-testnet.${domain}`,
-      `https://demeter-testnet.${domain}`,
-    ];
+  const chainRpcUrls = [
+    `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+  ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
