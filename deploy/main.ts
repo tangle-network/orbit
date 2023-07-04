@@ -14,13 +14,14 @@ import {
   VBridge,
   type TokenConfig,
   type VBridgeInput,
-} from '@webb-tools/vbridge/dist/VBridge.js';
+} from '@webb-tools/vbridge';
 import type { DeployerConfig, GovernorConfig } from '@webb-tools/interfaces';
 import { fetchComponentsFromFilePaths } from '@webb-tools/utils';
 import {
   ERC20__factory as ERC20Factory,
   SignatureBridge__factory as SignatureBridgeFactory,
   FungibleTokenWrapper__factory as FungibleTokenWrapperFactory,
+  type VAnchor,
 } from '@webb-tools/contracts';
 import {
   parseTypedChainId,
@@ -39,7 +40,7 @@ async function deployWebbBridge(
   tokens: Record<number, string[]>,
   deployers: DeployerConfig,
   governorConfig: GovernorConfig
-): Promise<VBridge> {
+): Promise<VBridge<VAnchor>> {
   const assetRecord: typeof tokens = {};
   const chainIdsArray: number[] = [];
   const webbTokens = new Map(); // left empty for now
@@ -53,7 +54,7 @@ async function deployWebbBridge(
     vAnchorInputs: {
       asset: assetRecord,
     },
-    chainIDs: chainIdsArray,
+    chainIds: chainIdsArray,
     tokenConfigs: fungibleTokensConfig,
     webbTokens,
   };

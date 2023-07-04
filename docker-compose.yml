@@ -112,13 +112,13 @@ services:
     environment:
       ETHEREUM_JSONRPC_HTTP_URL: http://athena_chain:8545/
       ETHEREUM_JSONRPC_WS_URL: ws://athena_chain:8545/
-      DATABASE_URL: postgresql://postgres:@db:5432/athena_blocksout?ssl=false
+      DATABASE_URL: postgresql://postgres:@db:5432/athena_blockscout?ssl=false
       CHAIN_ID: "${ATHENA_CHAIN_ID}"
       PORT: "${ATHENA_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${ATHENA_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "athena-explorer.${DOMAIN}"
     volumes:
-      - ./logs/athena_blocksout/:/app/logs/
+      - ./logs/athena_blockscout/:/app/logs/
     logging:
       driver: "json-file"
       options:
@@ -168,13 +168,13 @@ services:
     environment:
       ETHEREUM_JSONRPC_HTTP_URL: http://hermes_chain:8545/
       ETHEREUM_JSONRPC_WS_URL: ws://hermes_chain:8545/
-      DATABASE_URL: postgresql://postgres:@db:5432/hermes_blocksout?ssl=false
+      DATABASE_URL: postgresql://postgres:@db:5432/hermes_blockscout?ssl=false
       CHAIN_ID: "${HERMES_CHAIN_ID}"
       PORT: "${HERMES_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${HERMES_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "hermes-explorer.${DOMAIN}"
     volumes:
-      - ./logs/hermes_blocksout:/app/logs/
+      - ./logs/hermes_blockscout:/app/logs/
 
     logging:
       driver: "json-file"
@@ -226,13 +226,13 @@ services:
     environment:
       ETHEREUM_JSONRPC_HTTP_URL: http://demeter_chain:8545/
       ETHEREUM_JSONRPC_WS_URL: ws://demeter_chain:8545/
-      DATABASE_URL: postgresql://postgres:@db:5432/demeter_blocksout?ssl=false
+      DATABASE_URL: postgresql://postgres:@db:5432/demeter_blockscout?ssl=false
       CHAIN_ID: "${DEMETER_CHAIN_ID}"
       PORT: "${DEMETER_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${DEMETER_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "demeter-explorer.${DOMAIN}"
     volumes:
-      - ./logs/demeter_blocksout:/app/logs/
+      - ./logs/demeter_blockscout:/app/logs/
     logging:
       driver: "json-file"
       options:
