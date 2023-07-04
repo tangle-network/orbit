@@ -30,6 +30,7 @@ import {
 import chalk from 'chalk';
 import * as R from 'ramda';
 import { deployWETH9 } from './deployWETH.js';
+import { deployMulticall3 } from './deployMulticall3.js';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -172,6 +173,7 @@ type DeploymentConfig = {
   allowWrappingNativeToken: boolean;
   webbTokenName: string;
   webbTokenSymbol: string;
+  deployMulticall3: boolean;
 };
 
 async function transferOwnershipOfBridge(
@@ -183,15 +185,15 @@ async function transferOwnershipOfBridge(
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    ]
+        `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+        `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+        `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+      ]
     : [
-      `https://athena-testnet.${domain}`,
-      `https://hermes-testnet.${domain}`,
-      `https://demeter-testnet.${domain}`,
-    ];
+        `https://athena-testnet.${domain}`,
+        `https://hermes-testnet.${domain}`,
+        `https://demeter-testnet.${domain}`,
+      ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -417,6 +419,21 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
   // Write the config file
   fs.writeFileSync(path.resolve(dirname, '../config/orbit.toml'), configFile);
 
+  let multicall3Address: string | undefined;
+  if (config.deployMulticall3) {
+    console.log(chalk`{yellow Deploying Multicall3...}`);
+    for (const typedChainId of config.typedChainIds) {
+      const deployer = config.deployers[typedChainId];
+      const multicall3Contract = await deployMulticall3(deployer);
+      const receipt = await multicall3Contract.deployTransaction.wait();
+      multicall3Address = multicall3Contract.address;
+      const chainId = parseTypedChainId(typedChainId).chainId;
+      console.log(
+        chalk`{green.bold Chain ${chainId} Multicall3 deployed at: block {blue.bold ${receipt.blockNumber} - address {blue.bold ${multicall3Address}}}}`
+      );
+    }
+  }
+
   return {
     kind: 'Ok',
     deployment: {
@@ -424,6 +441,7 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
       anchorAddress,
       webbTokenAddress,
       wethAddress: config.wethAddress,
+      multicall3Address,
     },
   };
 }
@@ -499,6 +517,12 @@ export type Args = {
    * @example 1
    **/
   governorNonce: number;
+  /**
+   * Whether to deploy the Multicall3 contract
+   * @default true
+   * @example false
+   **/
+  deployMulticall3: boolean;
 };
 
 /**
@@ -595,6 +619,12 @@ async function parseArgs(args: string[]): Promise<Args> {
         demandOption: false,
         default: 0,
       },
+      deployMulticall3: {
+        type: 'boolean',
+        description: 'Whether to deploy Multicall3 contract',
+        demandOption: false,
+        default: true,
+      },
     })
     .parseAsync();
   return parsed;
@@ -605,24 +635,29 @@ export type Deployment = {
   anchorAddress: string;
   webbTokenAddress: string;
   wethAddress?: string;
+  multicall3Address?: string;
 };
 
 export type DeploymentResult =
   | {
-    kind: 'Ok';
-    deployment: Deployment;
-  }
+      kind: 'Ok';
+      deployment: Deployment;
+    }
   | {
-    kind: 'Err';
-    error: string;
-  };
+      kind: 'Err';
+      error: string;
+    };
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
   const vaultMnemonic = getVaultMnemonic();
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
-  // For Deployment, we create a new dummy wallet and use it to deploy the bridge
-  const deployer = ethers.Wallet.createRandom();
+
+  // For Deployment, if the deployer mnemonic is not provided, we will use a random wallet
+  const deployer = env.DEPLOYER_PRIVATE_KEY
+    ? new ethers.Wallet(env.DEPLOYER_PRIVATE_KEY)
+    : ethers.Wallet.createRandom();
+
   const chainRpcUrls = [
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
     `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
