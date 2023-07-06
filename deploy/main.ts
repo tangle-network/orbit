@@ -655,9 +655,10 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
 
   // For Deployment, if the deployer mnemonic is not provided, we will use a random wallet
-  const deployer = env.DEPLOYER_PRIVATE_KEY
-    ? new ethers.Wallet(env.DEPLOYER_PRIVATE_KEY)
-    : ethers.Wallet.createRandom();
+  const deployer =
+    env.DEPLOYER_PRIVATE_KEY !== '' && env.DEPLOYER_PRIVATE_KEY !== undefined
+      ? new ethers.Wallet(env.DEPLOYER_PRIVATE_KEY)
+      : ethers.Wallet.createRandom();
 
   const chainRpcUrls = [
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,

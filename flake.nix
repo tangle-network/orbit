@@ -26,6 +26,7 @@
           nativeBuildInputs = [ ];
           buildInputs = [
             # Used for DVC
+            # Use pipx run dvc <command>
             pkgs.python311
             pkgs.python311Packages.pipx
             # Nodejs
@@ -35,16 +36,6 @@
             pkgs.foundry-bin
           ];
           packages = [ ];
-          # Runs DVC pull in the fixtures
-          # we do not install dvc globally, since it
-          # is broken on nixos
-          shellHook = ''
-            ROOT=$(git rev-parse --show-toplevel)
-            cd $ROOT/deploy/fixtures
-            # Pull fixtures
-            pipx run dvc pull
-            cd $ROOT
-          '';
         };
       });
 }
