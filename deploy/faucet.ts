@@ -129,8 +129,9 @@ async function runFaucet(args: Args): Promise<void> {
     console.log(
       chalk`{bold Minting {blue.bold ${ethers.utils.formatEther(
         amount
-      )}} tokens to {blue.bold ${recipient}} on {green.bold ${network.chainId
-        }}}`
+      )}} tokens to {blue.bold ${recipient}} on {green.bold ${
+        network.chainId
+      }}}`
     );
     return tx.wait();
   };

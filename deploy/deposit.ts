@@ -97,7 +97,7 @@ async function main() {
   const testAccount = ethers.Wallet.createRandom().connect(provider);
   const tx1 = await vaultSender.sendTransaction({
     to: testAccount.address,
-    value: ethers.utils.parseEther("1000"),
+    value: ethers.utils.parseEther('1000'),
   });
   await tx1.wait();
 
