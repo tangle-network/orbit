@@ -186,15 +186,15 @@ async function transferOwnershipOfBridge(
   const domain = process.env.DOMAIN ?? 'localhost';
   const chainRpcUrls = isCI
     ? [
-        `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-        `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-        `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-      ]
+      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+    ]
     : [
-        `https://athena-testnet.${domain}`,
-        `https://hermes-testnet.${domain}`,
-        `https://demeter-testnet.${domain}`,
-      ];
+      `https://athena-testnet.${domain}`,
+      `https://hermes-testnet.${domain}`,
+      `https://demeter-testnet.${domain}`,
+    ];
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -641,13 +641,13 @@ export type Deployment = {
 
 export type DeploymentResult =
   | {
-      kind: 'Ok';
-      deployment: Deployment;
-    }
+    kind: 'Ok';
+    deployment: Deployment;
+  }
   | {
-      kind: 'Err';
-      error: string;
-    };
+    kind: 'Err';
+    error: string;
+  };
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
@@ -655,9 +655,10 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
 
   // For Deployment, if the deployer mnemonic is not provided, we will use a random wallet
-  const deployer = env.DEPLOYER_PRIVATE_KEY
-    ? new ethers.Wallet(env.DEPLOYER_PRIVATE_KEY)
-    : ethers.Wallet.createRandom();
+  const deployer =
+    env.DEPLOYER_PRIVATE_KEY !== '' && env.DEPLOYER_PRIVATE_KEY !== undefined
+      ? new ethers.Wallet(env.DEPLOYER_PRIVATE_KEY)
+      : ethers.Wallet.createRandom();
 
   const chainRpcUrls = [
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,

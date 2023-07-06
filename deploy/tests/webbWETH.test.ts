@@ -9,7 +9,6 @@ import { VAnchor } from '@webb-tools/anchors';
 import { SignatureBridge__factory as SignatureBridgeFactory } from '@webb-tools/contracts';
 import { FungibleTokenWrapper__factory as FungibleTokenWrapperFactory } from '@webb-tools/contracts';
 import { ethers } from 'ethers';
-import isCI from 'is-ci';
 import { fetchComponentsFromFilePaths, hexToU8a } from '@webb-tools/utils';
 import {
   ChainType,
@@ -46,24 +45,14 @@ describe('webbWETH', async () => {
     dotenv.config({
       path: '../.env',
     });
-    vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
-    const domain = env.DOMAIN ?? 'localhost';
-    const chainRpcUrls = isCI
-      ? [
-          `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-          `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-          `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-        ]
-      : [
-          `https://athena-testnet.${domain}`,
-          `https://hermes-testnet.${domain}`,
-          `https://demeter-testnet.${domain}`,
-        ];
 
-    providers = chainRpcUrls.map(
-      (url) => new ethers.providers.JsonRpcProvider(url)
+    // unset private key so that we can deploy with the mnemonic instead
+    env.DEPLOYER_PRIVATE_KEY = '';
+    const index = 0;
+    vault = ethers.Wallet.fromMnemonic(
+      getVaultMnemonic(),
+      `m/44'/60'/0'/0/${index}`
     );
-
     const result = await deployWithArgs({
       wethAddress: '',
       deployWeth: true,
@@ -80,6 +69,16 @@ describe('webbWETH', async () => {
     } else {
       webbWETH = result.deployment;
     }
+
+    const chainRpcUrls = [
+      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+    ];
+
+    providers = chainRpcUrls.map(
+      (url) => new ethers.providers.JsonRpcProvider(url)
+    );
   });
 
   it('should deploy', async () => {

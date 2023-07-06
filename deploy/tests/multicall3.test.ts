@@ -2,7 +2,6 @@ import Chai, { expect } from 'chai';
 import ChaiAsPromised from 'chai-as-promised';
 import * as dotenv from 'dotenv';
 import { ethers } from 'ethers';
-import isCI from 'is-ci';
 import { env } from 'node:process';
 import { deployWithArgs, type Deployment } from '../main.js';
 
@@ -30,24 +29,13 @@ describe('multicall3', async () => {
     dotenv.config({
       path: '../.env',
     });
-    vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
-    const domain = env.DOMAIN ?? 'localhost';
-    const chainRpcUrls = isCI
-      ? [
-          `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-          `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-          `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-        ]
-      : [
-          `https://athena-testnet.${domain}`,
-          `https://hermes-testnet.${domain}`,
-          `https://demeter-testnet.${domain}`,
-        ];
-
-    providers = chainRpcUrls.map(
-      (url) => new ethers.providers.JsonRpcProvider(url)
+    // unset private key so that we can deploy with the mnemonic instead
+    env.DEPLOYER_PRIVATE_KEY = '';
+    const index = 1;
+    vault = ethers.Wallet.fromMnemonic(
+      getVaultMnemonic(),
+      `m/44'/60'/0'/0/${index}`
     );
-
     const result = await deployWithArgs({
       wethAddress: '',
       deployWeth: true,
@@ -64,6 +52,16 @@ describe('multicall3', async () => {
     } else {
       deployment = result.deployment;
     }
+
+    const chainRpcUrls = [
+      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+    ];
+
+    providers = chainRpcUrls.map(
+      (url) => new ethers.providers.JsonRpcProvider(url)
+    );
   });
 
   it('should deploy', async () => {
