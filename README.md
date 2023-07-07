@@ -211,6 +211,14 @@ if you have it locally, you can also use it to connect to the running chains by 
 webb-relayer -vvv --tmp -c ./config
 ```
 
+### Running Webb Faucet
+
+To run Webb faucet backend locally, you need first to edit `config/Rocket.toml` file's twitter section and then run the following command:
+
+```bash
+docker compose -f faucet.yml up -d
+```
+
 ### Cleanup
 
 To clean up everything and start over, you can executed the following commands:
