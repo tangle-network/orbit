@@ -84,6 +84,20 @@ then, once done you can run the following command:
 docker compose up
 ```
 
+You can now access the deployed chains, locally under `http://localhost:${PORT}` where `$PORT` depends on the chain, for example
+Athena chain is running under `$ATHENA_CHAIN_PORT` port, revisit your `.env` file to get your configured ports.
+
+## Deploy Block Explorers
+
+To deploy the Block Explorers locally too, or on the server, you need to include the `explorers.yml` file, run the following:
+
+```bash
+docker compose -f docker-compose.yml -f explorers.yml up -d
+```
+
+This will deploy the block explorer for each chain, which you can access on localhost `http://localhost:${PORT}`where the `$PORT` here depends on which
+chain's explorer you are trying to visit, for example Athena chain explorer running under `http://localhost:${ATHENA_CHAIN_EXPLORER_PORT}`.
+
 ## Deploying the smart contracts
 
 To deploy the smart contracts, you can run the following command:
