@@ -25,10 +25,6 @@
           name = "orbit";
           nativeBuildInputs = [ ];
           buildInputs = [
-            # Used for DVC
-            # Use pipx run dvc <command>
-            pkgs.python311
-            pkgs.python311Packages.pipx
             # Nodejs
             pkgs.nodePackages.typescript-language-server
             pkgs.nodejs_18
