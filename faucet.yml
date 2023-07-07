@@ -1,0 +1,25 @@
+version: "3.5"
+
+networks:
+  webb:
+    driver: bridge
+
+services:
+  faucet_backend:
+    image: ghcr.io/webb-tools/faucet:edge
+    container_name: faucet-backend
+    ports:
+      - ${FAUCET_PORT}:8000
+    volumes:
+      - ./config:/faucet
+    networks:
+      - webb
+    env_file:
+      - .env
+    environment:
+      ROCKET_ADDRESS: 0.0.0.0
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"

@@ -1,0 +1,12 @@
+[default]
+db = "/faucet/db"
+mnemonic="test test test test test test test test test test test junk"
+time_to_wait_between_claims = { secs = 0, nanos = 0 }
+token_amount = 10
+verify_following_webb = false
+
+[global.oauth.twitter]
+provider = "twitter"
+client_id = "<client_id>"
+client_secret = "<client_secret>"
+redirect_uri = "http://localhost:3000"
