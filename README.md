@@ -44,7 +44,7 @@
 <h1 id="start"> Getting Started  🎉 </h1>
 
 Webb Orbit is a set of Isolated EVM Testnets used for our internal testing and development. Internally it runs
-a [ganache](https://trufflesuite.com/ganache/) instance with a few tweaks to make it more suitable for our needs.
+a [anvil](https://github.com/foundry-rs/foundry/tree/master/anvil) instance with a few tweaks to make it more suitable for our needs.
 
 As of now, we have these testnets running:
 
@@ -61,8 +61,6 @@ Need help adding these networks to your wallet like MetaMask? [Read Here](https:
 - Docker: https://docs.docker.com/get-docker/
 - Nodejs: https://nodejs.org/en/download/
 - Yarn: https://classic.yarnpkg.com/en/docs/install
-- Caddy: https://caddyserver.com/docs/install
-- DVC: https://dvc.org/doc/install
 
 ## Installation 💻
 
@@ -74,35 +72,17 @@ After installing the prerequisites, you can run the following command to start t
 
 ```bash
 cp .env.example .env
+# Fetch the zk fixtures
+./scripts/fetch-fixtures.sh
 ```
 
 Open the `.env` file in your editor and change what it is needed, usually they are the first section of the file.
-
-For local development update the following configuration for the caddy
-
-- Update administrative endpoint to admin 0.0.0.0:2019 in `Caddyfile`
-- Expose port 2019 of caddy in `docker-compose.yml`
-
 
 then, once done you can run the following command:
 
 ```bash
 docker compose up
 ```
-
-Once it is up, open another terminal and run the following command:
-
-```bash
-caddy trust
-```
-
-The testnets are running locally and you can access them via the RPC endpoints listed below:
-
-| Testnet   | RPC                                | Explorer                             |
-| --------- | ---------------------------------- | ------------------------------------ |
-| `Athena`  | `https://athena-testnet.localhost` | `https://athena-explorer.localhost`  |
-| `Hermes`  | `https://hermes-testnet.localhost` | `https://hermes-explorer.localhost`  |
-| `Demeter` | `http://demeter-testnet.localhost` | `https://demeter-explorer.localhost` |
 
 ## Deploying the smart contracts
 

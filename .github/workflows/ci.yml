@@ -35,6 +35,9 @@ jobs:
         working-directory: deploy
         run: yarn install
 
+      - name: Fetch ZK Fixtures
+        run: ./scripts/fetch-fixtures.sh
+
       - name: Run deployment script
         working-directory: deploy
         run: yarn deploy
