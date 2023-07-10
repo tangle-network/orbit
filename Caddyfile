@@ -50,3 +50,9 @@ demeter-explorer.{$DOMAIN} {
 		to http://demeter_blockscout:{$DEMETER_CHAIN_EXPLORER_PORT}
 	}
 }
+
+faucet-backend.{$DOMAIN} {
+	reverse_proxy {
+		to http://faucet_backend:8000
+	}
+}
