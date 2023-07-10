@@ -9,7 +9,7 @@ module.exports = {
   slow: 5000,
   timeout: 600000,
   retries: 0,
-  parallel: false,
+  parallel: true,
   'no-warnings': true,
   'use-openssl-ca': false,
 };
