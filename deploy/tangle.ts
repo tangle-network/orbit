@@ -11,7 +11,8 @@ import type { Codec, Registry } from '@polkadot/types-codec/types';
 import { u32, u128, createType } from '@polkadot/types';
 import type { KeyringPair } from '@polkadot/keyring/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ChainType, type TypedChainId, ResourceId } from '@webb-tools/sdk-core';
+import { ResourceId } from '@webb-tools/proposals';
+import { ChainType, type TypedChainId } from '@webb-tools/utils';
 import { fileURLToPath } from 'node:url';
 import chalk from 'chalk';
 
