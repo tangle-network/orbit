@@ -1,12 +1,13 @@
 import { VAnchor } from '@webb-tools/anchors';
+import * as dotenv from 'dotenv';
 import {
+  fetchComponentsFromFilePaths,
+  hexToU8a,
   calculateTypedChainId,
   ChainType,
-  CircomUtxo,
+  Utxo,
   Keypair,
-} from '@webb-tools/sdk-core';
-import * as dotenv from 'dotenv';
-import { fetchComponentsFromFilePaths, hexToU8a } from '@webb-tools/utils';
+} from '@webb-tools/utils';
 import { ethers } from 'ethers';
 import path from 'node:path';
 import { env, exit } from 'node:process';
@@ -142,7 +143,7 @@ async function main() {
   const HERMES_CHAIN_ID = parseInt(env.HERMES_CHAIN_ID!);
   const originChainId = calculateTypedChainId(ChainType.EVM, ATHENA_CHAIN_ID);
   const chainId = calculateTypedChainId(ChainType.EVM, HERMES_CHAIN_ID);
-  const depositUtxo = await CircomUtxo.generateUtxo({
+  const depositUtxo = Utxo.generateUtxo({
     curve: 'Bn254',
     backend: 'Circom',
     amount: ethers.utils.parseEther(args.amount.toString()).toHexString(),

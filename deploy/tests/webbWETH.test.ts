@@ -9,13 +9,14 @@ import { VAnchor } from '@webb-tools/anchors';
 import { SignatureBridge__factory as SignatureBridgeFactory } from '@webb-tools/contracts';
 import { FungibleTokenWrapper__factory as FungibleTokenWrapperFactory } from '@webb-tools/contracts';
 import { ethers } from 'ethers';
-import { fetchComponentsFromFilePaths, hexToU8a } from '@webb-tools/utils';
 import {
-  ChainType,
-  CircomUtxo,
+  fetchComponentsFromFilePaths,
+  hexToU8a,
+  Utxo,
   Keypair,
+  ChainType,
   calculateTypedChainId,
-} from '@webb-tools/sdk-core';
+} from '@webb-tools/utils';
 
 Chai.use(ChaiAsPromised);
 
@@ -170,7 +171,7 @@ describe('webbWETH', async () => {
       ChainType.EVM,
       providers[1].network.chainId
     );
-    const depositUtxo = await CircomUtxo.generateUtxo({
+    const depositUtxo = Utxo.generateUtxo({
       curve: 'Bn254',
       backend: 'Circom',
       amount: ethers.utils.parseEther('0.1').toHexString(),

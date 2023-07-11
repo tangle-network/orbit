@@ -16,18 +16,18 @@ import {
   type VBridgeInput,
 } from '@webb-tools/vbridge';
 import type { DeployerConfig, GovernorConfig } from '@webb-tools/interfaces';
-import { fetchComponentsFromFilePaths } from '@webb-tools/utils';
+import {
+  fetchComponentsFromFilePaths,
+  parseTypedChainId,
+  calculateTypedChainId,
+  ChainType,
+} from '@webb-tools/utils';
 import {
   ERC20__factory as ERC20Factory,
   SignatureBridge__factory as SignatureBridgeFactory,
   FungibleTokenWrapper__factory as FungibleTokenWrapperFactory,
   type VAnchor,
 } from '@webb-tools/contracts';
-import {
-  parseTypedChainId,
-  calculateTypedChainId,
-  ChainType,
-} from '@webb-tools/sdk-core';
 import chalk from 'chalk';
 import * as R from 'ramda';
 import { deployWETH9 } from './deployWETH.js';
