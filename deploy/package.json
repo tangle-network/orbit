@@ -23,11 +23,11 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@webb-tools/contracts": "^1.0.5",
-    "@webb-tools/interfaces": "^1.0.5",
-    "@webb-tools/proposals": "^1.0.5",
-    "@webb-tools/utils": "^1.0.5",
-    "@webb-tools/vbridge": "^1.0.5",
+    "@webb-tools/contracts": "^1.0.6",
+    "@webb-tools/interfaces": "^1.0.6",
+    "@webb-tools/proposals": "^1.0.6",
+    "@webb-tools/utils": "^1.0.6",
+    "@webb-tools/vbridge": "^1.0.6",
     "@polkadot/api": "9.2.3",
     "@polkadot/keyring": "10.1.5",
     "@polkadot/types": "9.2.3",
