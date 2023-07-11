@@ -44,6 +44,11 @@ export type Args = {
    * @example 0.1 ETH
    **/
   amount: number;
+  /**
+     * Number of Deposits to make
+     * @default 100
+     **/
+  numberOfDeposits: number;
 };
 
 /**
@@ -70,13 +75,19 @@ async function parseArgs(args: string[]): Promise<Args> {
         demandOption: false,
         default: 0.01,
       },
+      numberOfDeposits: {
+        type: 'number',
+        description: 'The amount of random deposits to make to the contract',
+        demandOption: false,
+        default: 1,
+      },
     })
     .parseAsync();
   return parsed;
 }
 // *** MAIN ***
-async function main() {
-  const args = await parseArgs(hideBin(process.argv));
+
+export const createDeposit = async (contractAddress: string, amount: string) => {
   // Load the environment variables
   dotenv.config({
     path: path.resolve(dirname, '../.env'),
@@ -133,7 +144,7 @@ async function main() {
   );
 
   const vanchor = await VAnchor.connect(
-    args.contractAddress,
+    contractAddress,
     zkComponentsSmall,
     zkComponentsLarge,
     testAccount
@@ -146,7 +157,7 @@ async function main() {
   const depositUtxo = Utxo.generateUtxo({
     curve: 'Bn254',
     backend: 'Circom',
-    amount: ethers.utils.parseEther(args.amount.toString()).toHexString(),
+    amount: ethers.utils.parseEther(amount.toString()).toHexString(),
     originChainId: originChainId.toString(),
     chainId: chainId.toString(),
     keypair: new Keypair(),
@@ -169,8 +180,17 @@ async function main() {
     }
   );
   console.log('TxHash:', res.transactionHash);
+}
+
+async function main() {
+  const args = await parseArgs(hideBin(process.argv));
+  for (let i = 0; i < args.numberOfDeposits; i++) {
+
+    await createDeposit(args.contractAddress, args.amount.toString());
+  }
   // Exit the script
   exit(0);
 }
+
 
 await main();
