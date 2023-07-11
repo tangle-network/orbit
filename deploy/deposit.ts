@@ -46,7 +46,7 @@ export type Args = {
   amount: number;
   /**
      * Number of Deposits to make
-     * @default 100
+     * @default 1
      **/
   numberOfDeposits: number;
 };
