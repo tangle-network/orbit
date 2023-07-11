@@ -4,7 +4,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     foundry = {
-      url = "github:shazow/foundry.nix";
+      url = "github:shazow/foundry.nix/monthly";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
@@ -25,10 +25,6 @@
           name = "orbit";
           nativeBuildInputs = [ ];
           buildInputs = [
-            # Used for DVC
-            # Use pipx run dvc <command>
-            pkgs.python311
-            pkgs.python311Packages.pipx
             # Nodejs
             pkgs.nodePackages.typescript-language-server
             pkgs.nodejs_18

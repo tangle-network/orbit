@@ -524,6 +524,12 @@ export type Args = {
    * @example false
    **/
   deployMulticall3: boolean;
+
+  /**
+   * Use this wallet as a vault wallet
+   * @default undefined
+   **/
+  vault?: ethers.Wallet;
 };
 
 /**
@@ -651,8 +657,7 @@ export type DeploymentResult =
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);
-  const vaultMnemonic = getVaultMnemonic();
-  const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
+  const vault = args.vault ?? ethers.Wallet.fromMnemonic(getVaultMnemonic());
 
   // For Deployment, if the deployer mnemonic is not provided, we will use a random wallet
   const deployer =
@@ -660,6 +665,8 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
       ? new ethers.Wallet(env.DEPLOYER_PRIVATE_KEY)
       : ethers.Wallet.createRandom();
 
+  console.log(chalk`{dim Using Vault Account: ${vault.address}...}`);
+  console.log(chalk`{dim Using Deployer Account: ${deployer.address}...}`);
   const chainRpcUrls = [
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
     `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
