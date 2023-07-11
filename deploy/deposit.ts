@@ -77,7 +77,7 @@ async function parseArgs(args: string[]): Promise<Args> {
       },
       numberOfDeposits: {
         type: 'number',
-        description: 'The amount of random deposits to make to the contract',
+        description: 'The number of deposits to make to the contract',
         demandOption: false,
         default: 1,
       },
