@@ -667,10 +667,12 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
 
   console.log(chalk`{dim Using Vault Account: ${vault.address}...}`);
   console.log(chalk`{dim Using Deployer Account: ${deployer.address}...}`);
+  const tangleEVMEndpoint = env.TANGLE_HTTP_URL;
   const chainRpcUrls = [
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
     `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
     `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+    tangleEVMEndpoint,
   ];
 
   const providers = chainRpcUrls.map(

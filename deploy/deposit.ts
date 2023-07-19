@@ -45,9 +45,9 @@ export type Args = {
    **/
   amount: number;
   /**
-     * Number of Deposits to make
-     * @default 1
-     **/
+   * Number of Deposits to make
+   * @default 1
+   **/
   numberOfDeposits: number;
 };
 
@@ -87,7 +87,10 @@ async function parseArgs(args: string[]): Promise<Args> {
 }
 // *** MAIN ***
 
-export const createDeposit = async (contractAddress: string, amount: string) => {
+export const createDeposit = async (
+  contractAddress: string,
+  amount: string
+) => {
   // Load the environment variables
   dotenv.config({
     path: path.resolve(dirname, '../.env'),
@@ -180,17 +183,15 @@ export const createDeposit = async (contractAddress: string, amount: string) => 
     }
   );
   console.log('TxHash:', res.transactionHash);
-}
+};
 
 async function main() {
   const args = await parseArgs(hideBin(process.argv));
   for (let i = 0; i < args.numberOfDeposits; i++) {
-
     await createDeposit(args.contractAddress, args.amount.toString());
   }
   // Exit the script
   exit(0);
 }
-
 
 await main();
