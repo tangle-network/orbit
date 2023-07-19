@@ -672,7 +672,8 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
     `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
     `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    tangleEVMEndpoint,
+    // Do not use Tangle for CI
+    ...(isCI ? [] : [tangleEVMEndpoint]),
   ];
 
   const providers = chainRpcUrls.map(
