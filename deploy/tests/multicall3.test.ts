@@ -46,6 +46,7 @@ describe('multicall3', async () => {
         '0x0277c66266b89414906b425c1d1089a448f506299444de64ea86c385ac2b78ff6e',
       governorNonce: 1,
       deployMulticall3: true,
+      includeTangleEVM: false,
       vault,
     });
     if (result.kind === 'Err') {
