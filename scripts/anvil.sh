@@ -7,11 +7,12 @@ ANVIL_MNEMONIC=${MNEMONIC:-"test test test test test test test test test test te
 
 anvil \
   --chain-id=${ANVIL_CHAIN_ID} \
-  --state=/data/state.bytes \
-  --state-interval=60 \
+  --state=/data/state.json \
+  --state-interval=30 \
   --mnemonic="${ANVIL_MNEMONIC}" \
   --balance=10000 \
   --gas-price=5000000000 \
   --steps-tracing \
+  --prune-history 300 \
   --host 0.0.0.0
 
