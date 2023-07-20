@@ -21,6 +21,7 @@ services:
       CHAIN_ID: "${ATHENA_CHAIN_ID}"
     command:
       - /scripts/anvil.sh
+    restart: always
     logging:
       driver: "json-file"
       options:
@@ -43,6 +44,7 @@ services:
       CHAIN_ID: "${HERMES_CHAIN_ID}"
     command:
       - /scripts/anvil.sh
+    restart: always
     logging:
       driver: "json-file"
       options:
@@ -65,6 +67,7 @@ services:
       CHAIN_ID: "${DEMETER_CHAIN_ID}"
     command:
       - /scripts/anvil.sh
+    restart: always
     logging:
       driver: "json-file"
       options:
