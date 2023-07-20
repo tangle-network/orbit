@@ -4,7 +4,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import yargs from 'yargs';
-import isCI from 'is-ci';
 import { hideBin } from 'yargs/helpers';
 import { ethers } from 'ethers';
 import * as dotenv from 'dotenv';
@@ -183,18 +182,15 @@ async function transferOwnershipOfBridge(
   console.log(chalk`{bold Starting transfer ownership script...}`);
   const vaultMnemonic = getVaultMnemonic();
   const vault = ethers.Wallet.fromMnemonic(vaultMnemonic);
-  const domain = process.env.DOMAIN ?? 'localhost';
-  const chainRpcUrls = isCI
-    ? [
-        `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-        `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-        `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-      ]
-    : [
-        `https://athena-testnet.${domain}`,
-        `https://hermes-testnet.${domain}`,
-        `https://demeter-testnet.${domain}`,
-      ];
+  const chainRpcUrls = [
+    `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+    `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+  ];
+  // Only add Tangle if it is enabled
+  if (args.includeTangleEVM && env.TANGLE_HTTP_URL) {
+    chainRpcUrls.push(env.TANGLE_HTTP_URL);
+  }
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
@@ -467,6 +463,13 @@ export type TransferOwnershipArgs = {
    * @example 1
    **/
   governorNonce: number;
+
+  /**
+   * Include tangle EVM chain.
+   * @default false
+   * @example true
+   **/
+  includeTangleEVM: boolean;
 };
 
 /**
@@ -530,6 +533,13 @@ export type Args = {
    * @default undefined
    **/
   vault?: ethers.Wallet;
+
+  /**
+   * Include tangle EVM chain.
+   * @default false
+   * @example true
+   **/
+  includeTangleEVM: boolean;
 };
 
 /**
@@ -569,6 +579,12 @@ async function parseArgs(args: string[]): Promise<Args> {
             description: 'The nonce of the governor',
             demandOption: false,
             default: 0,
+          },
+          includeTangleEVM: {
+            type: 'boolean',
+            description: 'Include tangle EVM chain',
+            demandOption: false,
+            default: false,
           },
         }),
       async (argv) => {
@@ -632,6 +648,12 @@ async function parseArgs(args: string[]): Promise<Args> {
         demandOption: false,
         default: true,
       },
+      includeTangleEVM: {
+        type: 'boolean',
+        description: 'Include tangle EVM chain',
+        demandOption: false,
+        default: false,
+      },
     })
     .parseAsync();
   return parsed;
@@ -667,14 +689,16 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
 
   console.log(chalk`{dim Using Vault Account: ${vault.address}...}`);
   console.log(chalk`{dim Using Deployer Account: ${deployer.address}...}`);
-  const tangleEVMEndpoint = env.TANGLE_HTTP_URL;
   const chainRpcUrls = [
     `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
     `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
     `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    // Do not use Tangle for CI
-    ...(isCI ? [] : [tangleEVMEndpoint]),
   ];
+
+  // Only add Tangle if it is enabled
+  if (args.includeTangleEVM && env.TANGLE_HTTP_URL) {
+    chainRpcUrls.push(env.TANGLE_HTTP_URL);
+  }
 
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
