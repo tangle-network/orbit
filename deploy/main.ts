@@ -411,6 +411,9 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
 
   // Replace the template variables with the actual values
   const configFile = template
+    .replace(/ATHENA_CHAIN_ID/g, env.ATHENA_CHAIN_ID!)
+    .replace(/HERMES_CHAIN_ID/g, env.HERMES_CHAIN_ID!)
+    .replace(/DEMETER_CHAIN_ID/g, env.DEMETER_CHAIN_ID!)
     .replace(/BRIDGE_ADDRESS/g, bridgeAddress)
     .replace(/VANCHOR_ADDRESS/g, anchorAddress);
   // Write the config file

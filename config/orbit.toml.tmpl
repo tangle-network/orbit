@@ -12,7 +12,7 @@ name = "athena"
 http-endpoint = "$ATHENA_HTTP_URL"
 ws-endpoint = "$ATHENA_WS_URL"
 explorer = "http://athena-explorer.localhost"
-chain-id = 3884533461
+chain-id = ATHENA_CHAIN_ID
 block-confirmations = 0
 private-key = "$ATHENA_TESTNET_PRIVATE_KEY"
 enabled = true
@@ -21,13 +21,13 @@ enabled = true
 contract = "VAnchor"
 address = "VANCHOR_ADDRESS"
 deployed-at = 1
-events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 30000 }
 withdraw-config = { withdraw-fee-percentage = 0, withdraw-gaslimit = "0x350000" }
 linked-anchors = [
-  { type = "Evm", chain = "hermes", chain-id = 3884533462, address = "VANCHOR_ADDRESS" },
-  { type = "Evm", chain = "demeter", chain-id = 3884533463, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "hermes", chain-id = HERMES_CHAIN_ID, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "demeter", chain-id = DEMETER_CHAIN_ID, address = "VANCHOR_ADDRESS" },
 ]
-smart-anchor-updates = { enabled = true, max-time-delay = 300, min-time-delay = 30 }
+smart-anchor-updates = { enabled = false, max-time-delay = 300, min-time-delay = 30 }
 proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY" }
 # proposal-signing-backend = { type = "DKGNode", chain-id = 1080 }
 
@@ -35,14 +35,14 @@ proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY
 contract = "SignatureBridge"
 address = "BRIDGE_ADDRESS"
 deployed-at = 1
-events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 30000 }
 
 [evm.hermes]
 name = "hermes"
 http-endpoint = "$HERMES_HTTP_URL"
 ws-endpoint = "$HERMES_WS_URL"
 explorer = "http://hermes-explorer.localhost"
-chain-id = 3884533462
+chain-id = HERMES_CHAIN_ID
 block-confirmations = 0
 private-key = "$HERMES_TESTNET_PRIVATE_KEY"
 enabled = true
@@ -51,13 +51,13 @@ enabled = true
 contract = "VAnchor"
 address = "VANCHOR_ADDRESS"
 deployed-at = 1
-events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 30000 }
 withdraw-config = { withdraw-fee-percentage = 0, withdraw-gaslimit = "0x350000" }
 linked-anchors = [
-  { type = "Evm", chain = "athena", chain-id = 3884533461, address = "VANCHOR_ADDRESS" },
-  { type = "Evm", chain = "demeter", chain-id = 3884533463, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "athena", chain-id = ATHENA_CHAIN_ID, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "demeter", chain-id = DEMETER_CHAIN_ID, address = "VANCHOR_ADDRESS" },
 ]
-smart-anchor-updates = { enabled = true, max-time-delay = 300, min-time-delay = 30 }
+smart-anchor-updates = { enabled = false, max-time-delay = 300, min-time-delay = 30 }
 proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY" }
 # proposal-signing-backend = { type = "DKGNode", chain-id = 1080 }
 
@@ -65,14 +65,14 @@ proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY
 contract = "SignatureBridge"
 address = "BRIDGE_ADDRESS"
 deployed-at = 1
-events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 30000 }
 
 [evm.demeter]
 name = "demeter"
 http-endpoint = "$DEMETER_HTTP_URL"
 ws-endpoint = "$DEMETER_WS_URL"
 explorer = "http://demeter-explorer.localhost"
-chain-id = 3884533463
+chain-id = DEMETER_CHAIN_ID
 block-confirmations = 0
 private-key = "$DEMETER_TESTNET_PRIVATE_KEY"
 enabled = true
@@ -81,13 +81,13 @@ enabled = true
 contract = "VAnchor"
 address = "VANCHOR_ADDRESS"
 deployed-at = 1
-events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 60000 }
+events-watcher = { enabled = true, polling-interval = 1000, print-progress-interval = 30000 }
 withdraw-config = { withdraw-fee-percentage = 0, withdraw-gaslimit = "0x350000" }
 linked-anchors = [
-  { type = "Evm", chain = "athena", chain-id = 3884533461, address = "VANCHOR_ADDRESS" },
-  { type = "Evm", chain = "hermes", chain-id = 3884533462, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "athena", chain-id = ATHENA_CHAIN_ID, address = "VANCHOR_ADDRESS" },
+  { type = "Evm", chain = "hermes", chain-id = HERMES_CHAIN_ID, address = "VANCHOR_ADDRESS" },
 ]
-smart-anchor-updates = { enabled = true, max-time-delay = 300, min-time-delay = 30 }
+smart-anchor-updates = { enabled = false, max-time-delay = 300, min-time-delay = 30 }
 proposal-signing-backend = { type = "Mocked", private-key = "$MOCKED_BACKEND_KEY" }
 # proposal-signing-backend = { type = "DKGNode", chain-id = 1080 }
 
