@@ -775,15 +775,8 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
       error: (e as Error).message,
     };
   }
-  const balances = await Promise.all(
-    deployerProviders.map((provider) => provider.getBalance())
-  );
-  const gasCost = ethers.utils.parseEther('0.0001');
-  const remBalance = balances
-    .reduce((acc, balance) => acc.add(balance), ethers.BigNumber.from(0))
-    .div(balances.length)
-    .sub(gasCost);
 
+  const remBalance = ethers.utils.parseEther('0.4');
   // Send the remaining funds back to the Vault Wallet
   await Promise.all(
     R.zipWith(R.curry(sendFunds)(remBalance), deployerProviders, vaultProviders)
