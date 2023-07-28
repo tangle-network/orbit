@@ -742,9 +742,24 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
     chalk`{bold Sending funds to deployer {blue.bold ${deployer.address}}}`
   );
 
-  const value = ethers.utils.parseEther('1');
+  let defaultValue = ethers.utils.parseEther('1');
+  let valueByNetwork: Record<string, ethers.BigNumberish> = {
+    [env.ATHENA_CHAIN_ID!]: defaultValue,
+    [env.HERMES_CHAIN_ID!]: defaultValue,
+    [env.DEMETER_CHAIN_ID!]: defaultValue,
+    [env.TANGLE_CHAIN_ID!]: ethers.utils.parseEther('10'),
+  };
+
   await Promise.all(
-    R.zipWith(R.curry(sendFunds)(value), vaultProviders, deployerProviders)
+    R.zipWith(
+      async (vault, deployer) => {
+        const chainId = await vault.getChainId();
+        const value = valueByNetwork[chainId] ?? defaultValue;
+        return sendFunds(value, vault, deployer);
+      },
+      vaultProviders,
+      deployerProviders
+    )
   );
 
   let result: DeploymentResult;
@@ -776,10 +791,21 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
     };
   }
 
-  const remBalance = ethers.utils.parseEther('0.4');
   // Send the remaining funds back to the Vault Wallet
   await Promise.all(
-    R.zipWith(R.curry(sendFunds)(remBalance), deployerProviders, vaultProviders)
+    R.zipWith(
+      async (deployer, vault) => {
+        let balance = await deployer.getBalance();
+        if (balance.gt(ethers.constants.Zero)) {
+          let remaining = balance.sub(ethers.utils.parseEther('0.1'));
+          return sendFunds(remaining, deployer, vault);
+        } else {
+          return Promise.resolve();
+        }
+      },
+      deployerProviders,
+      vaultProviders
+    )
   );
 
   console.log(
