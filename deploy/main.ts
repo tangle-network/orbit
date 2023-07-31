@@ -730,7 +730,12 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
       to: to.address,
       value,
     });
-    return tx.wait();
+    const result = await tx.wait();
+    const network = await from.provider?.getNetwork();
+    const v = ethers.utils.formatEther(value);
+    console.log(
+      chalk`{dim Sent {blue ${v}} ETH from {blue ${from.address}} to {blue ${to.address}} on {blue ${network?.chainId}}. Tx Hash: {blue ${result.transactionHash}}}`
+    );
   };
 
   // We use the Vault wallet to send the deployer some funds to pay for the deployment
@@ -747,7 +752,7 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
     [env.ATHENA_CHAIN_ID!]: defaultValue,
     [env.HERMES_CHAIN_ID!]: defaultValue,
     [env.DEMETER_CHAIN_ID!]: defaultValue,
-    [env.TANGLE_CHAIN_ID!]: ethers.utils.parseEther('10'),
+    [env.TANGLE_CHAIN_ID!]: ethers.utils.parseEther('2'),
   };
 
   await Promise.all(
@@ -755,6 +760,10 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
       async (vault, deployer) => {
         const chainId = await vault.getChainId();
         const value = valueByNetwork[chainId] ?? defaultValue;
+        const v = ethers.utils.formatEther(value);
+        console.log(
+          chalk`{dim Sending {blue ${v}} ETH from {blue ${vault.address}} to {blue ${deployer.address}} on {blue ${chainId}}}`
+        );
         return sendFunds(value, vault, deployer);
       },
       vaultProviders,
@@ -797,7 +806,11 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
       async (deployer, vault) => {
         let balance = await deployer.getBalance();
         if (balance.gt(ethers.constants.Zero)) {
-          let remaining = balance.sub(ethers.utils.parseEther('0.1'));
+          let remaining = balance.sub(ethers.utils.parseEther('0.01'));
+          let v = ethers.utils.formatEther(remaining);
+          console.log(
+            chalk`{dim Sending remaining {blue ${v}} ETH from {blue ${deployer.address}} to {blue ${vault.address}}}`
+          );
           return sendFunds(remaining, deployer, vault);
         } else {
           return Promise.resolve();
