@@ -346,14 +346,28 @@ async function deploy(config: DeploymentConfig): Promise<DeploymentResult> {
     await tx3.wait();
 
     // Then Remove the deployer's from the roles
-    const tx4 = await fungibleTokenWrapper.revokeRole(
+    let gas = await fungibleTokenWrapper.estimateGas.revokeRole(
       minterRole,
       deployer.address
     );
+    const tx4 = await fungibleTokenWrapper.revokeRole(
+      minterRole,
+      deployer.address,
+      {
+        gasLimit: gas.mul(2),
+      }
+    );
     await tx4.wait();
-    const tx5 = await fungibleTokenWrapper.revokeRole(
+    gas = await fungibleTokenWrapper.estimateGas.revokeRole(
       pauserRole,
       deployer.address
+    );
+    const tx5 = await fungibleTokenWrapper.revokeRole(
+      pauserRole,
+      deployer.address,
+      {
+        gasLimit: gas.mul(2),
+      }
     );
     await tx5.wait();
   }
@@ -794,6 +808,7 @@ export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
     result = await deploy(config);
   } catch (e) {
     console.error(e);
+    console.log((e as Error).stack);
     result = {
       kind: 'Err',
       error: (e as Error).message,

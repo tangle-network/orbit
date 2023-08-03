@@ -189,3 +189,41 @@ services:
       options:
         max-size: "100m"
         max-file: "10"
+
+  tangle_blockscout:
+    depends_on:
+      - db
+      - smart-contract-verifier
+    image: blockscout/blockscout:${DOCKER_TAG:-latest}
+    pull_policy: always
+    restart: always
+    networks:
+      - webb
+    stop_grace_period: 5m
+    container_name: "tangle-blockscout"
+    links:
+      - db:database
+    command: bash -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
+    env_file:
+      - .env
+    environment:
+      ETHEREUM_JSONRPC_VARIANT: geth
+      ETHEREUM_JSONRPC_HTTP_URL: http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:9944/
+      ETHEREUM_JSONRPC_WS_URL: ws://${DOCKER_GATEWAY_HOST:-host.docker.internal}:9944/
+      ETHEREUM_JSONRPC_TRACE_URL: http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:9944/
+      DATABASE_URL: postgresql://postgres:@db:5432/tangle_blockscout?ssl=false
+      ETHEREUM_JSONRPC_DEBUG_TRACE_TRANSACTION_TIMEOUT: 5m
+      CHAIN_ID: "${TANGLE_CHAIN_ID}"
+      PORT: "${TANGLE_CHAIN_EXPLORER_PORT}"
+      SUBNETWORK: "${TANGLE_CHAIN_SUBNETWORK}"
+      BLOCKSCOUT_HOST: "tangle-explorer.${DOMAIN}"
+    ports:
+     - ${TANGLE_CHAIN_EXPLORER_PORT}:${TANGLE_CHAIN_EXPLORER_PORT}
+    volumes:
+      - ./logs/tangle_blockscout:/app/logs/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+

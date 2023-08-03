@@ -22,6 +22,7 @@ export type Args = {
   erc20Address?: string;
   nativeTokenAmount: string;
   erc20Amount?: string;
+  includeTangleEVM: boolean;
 };
 
 /*
@@ -53,6 +54,12 @@ async function parseArgs(args: string[]): Promise<Args> {
         description: 'The amount of ERC20 token to send',
         demandOption: false,
       },
+      includeTangleEVM: {
+        type: 'boolean',
+        description: 'Include tangle EVM chain',
+        demandOption: false,
+        default: false,
+      },
     })
     .parseAsync();
   return parsed;
@@ -81,6 +88,10 @@ async function runFaucet(args: Args): Promise<void> {
     `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
   ];
 
+  // Only add Tangle if it is enabled
+  if (args.includeTangleEVM && env.TANGLE_HTTP_URL) {
+    chainRpcUrls.push(env.TANGLE_HTTP_URL);
+  }
   const providers = chainRpcUrls.map(
     (url) => new ethers.providers.JsonRpcProvider(url)
   );

@@ -23,11 +23,11 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@webb-tools/contracts": "^1.0.6",
-    "@webb-tools/interfaces": "^1.0.6",
-    "@webb-tools/proposals": "^1.0.6",
-    "@webb-tools/utils": "^1.0.6",
-    "@webb-tools/vbridge": "^1.0.6",
+    "@webb-tools/contracts": "^1.0.8",
+    "@webb-tools/interfaces": "^1.0.8",
+    "@webb-tools/proposals": "^1.0.8",
+    "@webb-tools/utils": "^1.0.8",
+    "@webb-tools/vbridge": "^1.0.8",
     "@webb-tools/tangle-substrate-types": "0.3.2-hotfix.1",
     "chalk": "^4",
     "ecpair": "^2.1.0",
