@@ -6,13 +6,12 @@ networks:
 
 services:
   athena_chain:
-    image: ghcr.io/foundry-rs/foundry:${FOUNDRY_DOCKER_TAG}
+    image: trufflesuite/ganache:latest
     container_name: athena-chain
     ports:
       - ${ATHENA_CHAIN_PORT}:8545
     volumes:
       - ./data/athena_chain:/data
-      - ./scripts:/scripts
     networks:
       - webb
     env_file:
@@ -20,7 +19,13 @@ services:
     environment:
       CHAIN_ID: "${ATHENA_CHAIN_ID}"
     command:
-      - /scripts/anvil.sh
+      - "--chain.chainId=${ATHENA_CHAIN_ID}"
+      - "--database.dbPath=/data"
+      - "--miner.defaultGasPrice=5000000000" # 5 gwei
+      - "--wallet.mnemonic=${MNEMONIC}"
+      - "--wallet.defaultBalance=10000" # 10,000 ETH
+      - "--logging.debug=false"
+      - "--logging.verbose=false"
     restart: always
     logging:
       driver: "json-file"
@@ -29,13 +34,12 @@ services:
         max-file: "10"
 
   hermes_chain:
-    image: ghcr.io/foundry-rs/foundry:${FOUNDRY_DOCKER_TAG}
+    image: trufflesuite/ganache:latest
     container_name: hermes-chain
     ports:
       - ${HERMES_CHAIN_PORT}:8545
     volumes:
       - ./data/hermes_chain:/data
-      - ./scripts:/scripts
     networks:
       - webb
     env_file:
@@ -43,7 +47,13 @@ services:
     environment:
       CHAIN_ID: "${HERMES_CHAIN_ID}"
     command:
-      - /scripts/anvil.sh
+      - "--chain.chainId=${HERMES_CHAIN_ID}"
+      - "--database.dbPath=/data"
+      - "--miner.defaultGasPrice=5000000000" # 5 gwei
+      - "--wallet.mnemonic=${MNEMONIC}"
+      - "--wallet.defaultBalance=10000" # 10,000 ETH
+      - "--logging.debug=false"
+      - "--logging.verbose=false"
     restart: always
     logging:
       driver: "json-file"
@@ -52,13 +62,12 @@ services:
         max-file: "10"
 
   demeter_chain:
-    image: ghcr.io/foundry-rs/foundry:${FOUNDRY_DOCKER_TAG}
+    image: trufflesuite/ganache:latest
     container_name: demeter-chain
     ports:
       - ${DEMETER_CHAIN_PORT}:8545
     volumes:
       - ./data/demeter_chain:/data
-      - ./scripts:/scripts
     networks:
       - webb
     env_file:
@@ -66,7 +75,13 @@ services:
     environment:
       CHAIN_ID: "${DEMETER_CHAIN_ID}"
     command:
-      - /scripts/anvil.sh
+      - "--chain.chainId=${DEMETER_CHAIN_ID}"
+      - "--database.dbPath=/data"
+      - "--miner.defaultGasPrice=5000000000" # 5 gwei
+      - "--wallet.mnemonic=${MNEMONIC}"
+      - "--wallet.defaultBalance=10000" # 10,000 ETH
+      - "--logging.debug=false"
+      - "--logging.verbose=false"
     restart: always
     logging:
       driver: "json-file"
