@@ -88,6 +88,7 @@ function mk_genesis() {
   local datadir=$2
   local validator_address_hex=$(echo $VAULT_ACCOUNT_ADDRESS | sed 's/^0x//')
   local extra_data=$(mk_extradata $VAULT_ACCOUNT_ADDRESS)
+  echo "Generated extra data: $extra_data"
   mkdir -p $ROOT_DIR/$datadir
   jq ".config.chainId |= $chain_id | .extraData |= \"$extra_data\" | .alloc.\"$validator_address_hex\".balance |= \"0x152d02c7e14af6800000\"" \
     $ROOT_DIR/config/genesis.json > $ROOT_DIR/$datadir/genesis.json
