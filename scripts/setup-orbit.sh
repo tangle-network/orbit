@@ -53,7 +53,7 @@ function geth() {
   required_arg "$1" "chain-datadir"
   local chain_datadir=$1
   shift 1 # Remove the first arg $1 from the list of args $@
-  docker run -it --rm -v $ROOT_DIR/$chain_datadir:/data ethereum/client-go:stable --datadir /data "$@"
+  docker run -t --rm -v $ROOT_DIR/$chain_datadir:/data ethereum/client-go:stable --datadir /data "$@"
 }
 
 # Extradata is the extra data field in the genesis file.
