@@ -49,11 +49,7 @@ describe('webbWETH', async () => {
 
     // unset private key so that we can deploy with the mnemonic instead
     env.DEPLOYER_PRIVATE_KEY = '';
-    const index = 0;
-    vault = ethers.Wallet.fromMnemonic(
-      getVaultMnemonic(),
-      `m/44'/60'/0'/0/${index}`
-    );
+    vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
     const result = await deployWithArgs({
       wethAddress: '',
       deployWeth: true,
