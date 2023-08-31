@@ -21,6 +21,9 @@ trap 'exit' ERR
 # Retrieve the root directory of the repository.
 ROOT_DIR=$(git rev-parse --show-toplevel)
 
+# Load the environment variables from the `.env` file.
+source $ROOT_DIR/.env
+
 # Check the required tools are installed.
 # jq is used to manipulate the genesis.json file.
 
