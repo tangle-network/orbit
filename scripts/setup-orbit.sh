@@ -68,8 +68,7 @@ function mk_extradata() {
   required_arg "$1" "validator-address"
   local validator_address=$1
   local validator_address_hex=$(echo $validator_address | sed 's/^0x//')
-  local extra_data=$(printf "0x%064s%s%0130s" "0" $validator_address_hex "0")
-  echo $extra_data
+  echo "0x0000000000000000000000000000000000000000000000000000000000000000${validator_address_hex}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 }
 
 # Generate the genesis file for each chain.
@@ -88,7 +87,6 @@ function mk_genesis() {
   local datadir=$2
   local validator_address_hex=$(echo $VAULT_ACCOUNT_ADDRESS | sed 's/^0x//')
   local extra_data=$(mk_extradata $VAULT_ACCOUNT_ADDRESS)
-  echo "Generated extra data: $extra_data"
   mkdir -p $ROOT_DIR/$datadir
   jq ".config.chainId |= $chain_id | .extraData |= \"$extra_data\" | .alloc.\"$validator_address_hex\".balance |= \"0x152d02c7e14af6800000\"" \
     $ROOT_DIR/config/genesis.json > $ROOT_DIR/$datadir/genesis.json
