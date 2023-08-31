@@ -9,7 +9,6 @@ Chai.use(ChaiAsPromised);
 
 describe('multicall3', async () => {
   let deployment: Deployment;
-  let providers: ethers.providers.JsonRpcProvider[];
   let vault: ethers.Wallet;
 
   /**
@@ -50,16 +49,6 @@ describe('multicall3', async () => {
     } else {
       deployment = result.deployment;
     }
-
-    const chainRpcUrls = [
-      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    ];
-
-    providers = chainRpcUrls.map(
-      (url) => new ethers.providers.JsonRpcProvider(url)
-    );
   });
 
   it('should deploy', async () => {
