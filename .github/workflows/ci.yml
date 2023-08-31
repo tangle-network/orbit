@@ -19,7 +19,9 @@ jobs:
         run: cp .env.example .env
 
       - name: Prepare environment
-        run: bash ./scripts/setup-orbit.sh
+        run: |
+          source .env
+          bash ./scripts/setup-orbit.sh
 
       - name: Setup environment with docker compose
         run: docker compose up -d
