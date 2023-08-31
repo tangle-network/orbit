@@ -1,6 +1,6 @@
 {
   "config": {
-    "chainId": 5005,
+    "chainId": 0,
     "homesteadBlock": 0,
     "daoForkSupport": true,
     "eip150Block": 0,
@@ -795,9 +795,6 @@
     },
     "00000000000000000000000000000000000000ff": {
       "balance": "0x1"
-    },
-    "7e5f4552091a69125d5dfcb7b8c2659029395bdf": {
-      "balance": "0x152d02c7e14af6800000"
     }
   },
   "number": "0x0",

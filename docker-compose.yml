@@ -6,7 +6,7 @@ networks:
 
 services:
   athena_chain:
-    image: trufflesuite/ganache:latest
+    image: ethereum/client-go:stable
     container_name: athena-chain
     ports:
       - ${ATHENA_CHAIN_PORT}:8545
@@ -19,13 +19,30 @@ services:
     environment:
       CHAIN_ID: "${ATHENA_CHAIN_ID}"
     command:
-      - "--chain.chainId=${ATHENA_CHAIN_ID}"
-      - "--database.dbPath=/data"
-      - "--miner.defaultGasPrice=5000000000" # 5 gwei
-      - "--wallet.mnemonic=${MNEMONIC}"
-      - "--wallet.defaultBalance=10000" # 10,000 ETH
-      - "--logging.debug=false"
-      - "--logging.verbose=false"
+      - --datadir=/data
+      - --networkid=${ATHENA_CHAIN_ID}
+      - --ipcdisable
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.api=eth,net,web3,debug,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.api=eth,net,web3,debug,txpool
+      - --ws.origins=*
+      - --graphql
+      - --graphql.corsdomain=*
+      - --graphql.vhosts=*
+      - --nodiscover
+      - --cache=512
+      - --mine
+      - --miner.etherbase=${VAULT_ACCOUNT_ADDRESS}
+      - --allow-insecure-unlock
+      - --unlock=${VAULT_ACCOUNT_ADDRESS}
+      - --password=/data/password.txt
     restart: always
     logging:
       driver: "json-file"
@@ -34,7 +51,7 @@ services:
         max-file: "10"
 
   hermes_chain:
-    image: trufflesuite/ganache:latest
+    image: ethereum/client-go:stable
     container_name: hermes-chain
     ports:
       - ${HERMES_CHAIN_PORT}:8545
@@ -47,13 +64,30 @@ services:
     environment:
       CHAIN_ID: "${HERMES_CHAIN_ID}"
     command:
-      - "--chain.chainId=${HERMES_CHAIN_ID}"
-      - "--database.dbPath=/data"
-      - "--miner.defaultGasPrice=5000000000" # 5 gwei
-      - "--wallet.mnemonic=${MNEMONIC}"
-      - "--wallet.defaultBalance=10000" # 10,000 ETH
-      - "--logging.debug=false"
-      - "--logging.verbose=false"
+      - --datadir=/data
+      - --networkid=${HERMES_CHAIN_ID}
+      - --ipcdisable
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.api=eth,net,web3,debug,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.api=eth,net,web3,debug,txpool
+      - --ws.origins=*
+      - --graphql
+      - --graphql.corsdomain=*
+      - --graphql.vhosts=*
+      - --nodiscover
+      - --cache=512
+      - --mine
+      - --miner.etherbase=${VAULT_ACCOUNT_ADDRESS}
+      - --allow-insecure-unlock
+      - --unlock=${VAULT_ACCOUNT_ADDRESS}
+      - --password=/data/password.txt
     restart: always
     logging:
       driver: "json-file"
@@ -62,7 +96,7 @@ services:
         max-file: "10"
 
   demeter_chain:
-    image: trufflesuite/ganache:latest
+    image: ethereum/client-go:stable
     container_name: demeter-chain
     ports:
       - ${DEMETER_CHAIN_PORT}:8545
@@ -75,16 +109,34 @@ services:
     environment:
       CHAIN_ID: "${DEMETER_CHAIN_ID}"
     command:
-      - "--chain.chainId=${DEMETER_CHAIN_ID}"
-      - "--database.dbPath=/data"
-      - "--miner.defaultGasPrice=5000000000" # 5 gwei
-      - "--wallet.mnemonic=${MNEMONIC}"
-      - "--wallet.defaultBalance=10000" # 10,000 ETH
-      - "--logging.debug=false"
-      - "--logging.verbose=false"
+      - --datadir=/data
+      - --networkid=${DEMETER_CHAIN_ID}
+      - --ipcdisable
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.api=eth,net,web3,debug,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.api=eth,net,web3,debug,txpool
+      - --ws.origins=*
+      - --graphql
+      - --graphql.corsdomain=*
+      - --graphql.vhosts=*
+      - --nodiscover
+      - --cache=512
+      - --mine
+      - --miner.etherbase=${VAULT_ACCOUNT_ADDRESS}
+      - --allow-insecure-unlock
+      - --unlock=${VAULT_ACCOUNT_ADDRESS}
+      - --password=/data/password.txt
     restart: always
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
         max-file: "10"
+
