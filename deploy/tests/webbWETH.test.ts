@@ -42,7 +42,7 @@ describe('webbWETH', async () => {
     return maybeVaultMnemonic;
   }
 
-  before(async (done) => {
+  before(async () => {
     dotenv.config({
       path: '../.env',
     });
@@ -78,7 +78,6 @@ describe('webbWETH', async () => {
     } else {
       webbWETH = result.deployment;
     }
-    done();
   });
 
   it('should deploy', async () => {

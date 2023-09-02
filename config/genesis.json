@@ -16,7 +16,7 @@
     "terminalTotalDifficulty": 10790000,
     "terminalTotalDifficultyPassed": true,
     "clique": {
-      "period": 6,
+      "period": 1,
       "epoch": 30000
     }
   },
