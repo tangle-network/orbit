@@ -16,7 +16,7 @@
     "terminalTotalDifficulty": 10790000,
     "terminalTotalDifficultyPassed": true,
     "clique": {
-      "period": 6,
+      "period": 1,
       "epoch": 30000
     }
   },
@@ -795,6 +795,12 @@
     },
     "00000000000000000000000000000000000000ff": {
       "balance": "0x1"
+    },
+    "70997970c51812dc3a010c7d01b50e0d17dc79c8": {
+      "balance": "0x3635C9ADC5DEA00000"
+    },
+    "2DFA35bd8C59C38FB3eC4e71b0106160E130A40E": {
+      "balance": "0x3635C9ADC5DEA00000"
     }
   },
   "number": "0x0",
