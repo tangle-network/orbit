@@ -47,13 +47,19 @@ describe('webbWETH', async () => {
       path: '../.env',
     });
 
+    const chainRpcUrls = [
+      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
+      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
+    ];
+
+    providers = chainRpcUrls.map(
+      (url) => new ethers.providers.JsonRpcProvider(url)
+    );
+
     // unset private key so that we can deploy with the mnemonic instead
     env.DEPLOYER_PRIVATE_KEY = '';
-    const index = 0;
-    vault = ethers.Wallet.fromMnemonic(
-      getVaultMnemonic(),
-      `m/44'/60'/0'/0/${index}`
-    );
+    vault = ethers.Wallet.fromMnemonic(getVaultMnemonic());
     const result = await deployWithArgs({
       wethAddress: '',
       deployWeth: true,
@@ -72,16 +78,6 @@ describe('webbWETH', async () => {
     } else {
       webbWETH = result.deployment;
     }
-
-    const chainRpcUrls = [
-      `http://127.0.0.1:${env.ATHENA_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.HERMES_CHAIN_PORT}`,
-      `http://127.0.0.1:${env.DEMETER_CHAIN_PORT}`,
-    ];
-
-    providers = chainRpcUrls.map(
-      (url) => new ethers.providers.JsonRpcProvider(url)
-    );
   });
 
   it('should deploy', async () => {

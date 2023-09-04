@@ -686,13 +686,13 @@ export type Deployment = {
 
 export type DeploymentResult =
   | {
-      kind: 'Ok';
-      deployment: Deployment;
-    }
+    kind: 'Ok';
+    deployment: Deployment;
+  }
   | {
-      kind: 'Err';
-      error: string;
-    };
+    kind: 'Err';
+    error: string;
+  };
 
 export async function deployWithArgs(args: Args): Promise<DeploymentResult> {
   console.log(chalk`{bold Starting deployment script...}`);

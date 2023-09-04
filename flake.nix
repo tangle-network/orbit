@@ -29,7 +29,9 @@
             pkgs.nodePackages.typescript-language-server
             pkgs.nodejs_18
             pkgs.nodePackages.yarn
+            # TOOLING
             pkgs.foundry-bin
+            pkgs.jq
           ];
           packages = [ ];
         };

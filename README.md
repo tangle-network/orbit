@@ -44,7 +44,7 @@
 <h1 id="start"> Getting Started  🎉 </h1>
 
 Webb Orbit is a set of Isolated EVM Testnets used for our internal testing and development. Internally it runs
-a [anvil](https://github.com/foundry-rs/foundry/tree/master/anvil) instance with a few tweaks to make it more suitable for our needs.
+a geth instance with a few tweaks to make it more suitable for our needs.
 
 As of now, we have these testnets running:
 
@@ -78,7 +78,13 @@ cp .env.example .env
 
 Open the `.env` file in your editor and change what it is needed, usually they are the first section of the file.
 
-then, once done you can run the following command:
+Once done you can run the following command:
+
+```bash
+source .env # This will load the environment variables
+./scripts/setup-orbit.sh # This will setup the orbit chains for you
+```
+Next, simply run the following command to start the chains:
 
 ```bash
 docker compose up
