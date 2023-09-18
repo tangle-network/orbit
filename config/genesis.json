@@ -29,34 +29,37 @@
   "coinbase": "0x0000000000000000000000000000000000000000",
   "alloc": {
     "8712c0449d1440d24a532a17c553e7661114e6bc": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "bFAc59575FeC3d1b33C7685eE6b3a2BfC155bdF3": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "46Bf9B20A8144BaA7C2BB76303b6a17eB8755408": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "c65351122A5dc7881559DeE52e025678212C615C": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "2ecceed83d6d2908cf4d67c76984e0bbcbfebbc1": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "228B67B0e42485E21373A7BB7278a0d02C8fDb18": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "5d26a601A80E3f472C5d6C3D1EdD78860F87Ac18": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "21Add37cBA50CF92A734c3Ee02FCeaDEf3dC57D6": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "2DFA35bd8C59C38FB3eC4e71b0106160E130A40E": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "3B3693DFB6711246B7F93CF385D4c3CC268F9879": {
-      "balance": "0x19E0C9BAB2400000"
+      "balance": "0x21E19E0C9BAB2400000"
+    },
+    "3240ad09fa57f8d9e9753c8308df303cbc9c6aca": {
+      "balance": "0x21E19E0C9BAB2400000"
     },
     "0000000000000000000000000000000000000000": {
       "balance": "0x1"
