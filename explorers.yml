@@ -113,6 +113,9 @@ services:
       ETHEREUM_JSONRPC_HTTP_URL: http://athena_chain:8545/
       ETHEREUM_JSONRPC_WS_URL: ws://athena_chain:8545/
       DATABASE_URL: postgresql://postgres:@db:5432/athena_blockscout?ssl=false
+      COIN: ORBt
+      COIN_NAME: ORBt
+      SHOW_PRICE_CHART: false
       CHAIN_ID: "${ATHENA_CHAIN_ID}"
       PORT: "${ATHENA_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${ATHENA_CHAIN_SUBNETWORK}"
@@ -146,6 +149,8 @@ services:
       ETHEREUM_JSONRPC_WS_URL: ws://hermes_chain:8545/
       DATABASE_URL: postgresql://postgres:@db:5432/hermes_blockscout?ssl=false
       CHAIN_ID: "${HERMES_CHAIN_ID}"
+      COIN: ORBt
+      COIN_NAME: ORBt
       PORT: "${HERMES_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${HERMES_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "hermes-explorer.${DOMAIN}"
@@ -179,6 +184,8 @@ services:
       ETHEREUM_JSONRPC_WS_URL: ws://demeter_chain:8545/
       DATABASE_URL: postgresql://postgres:@db:5432/demeter_blockscout?ssl=false
       CHAIN_ID: "${DEMETER_CHAIN_ID}"
+      COIN: ORBt
+      COIN_NAME: ORBt
       PORT: "${DEMETER_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${DEMETER_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "demeter-explorer.${DOMAIN}"
@@ -214,6 +221,9 @@ services:
       DATABASE_URL: postgresql://postgres:@db:5432/tangle_blockscout?ssl=false
       ETHEREUM_JSONRPC_DEBUG_TRACE_TRANSACTION_TIMEOUT: 5m
       INDEXER_INTERNAL_TRANSACTIONS_TRACER_TYPE: js
+      COIN: tTNT
+      COIN_NAME: tTNT
+      SHOW_PRICE_CHART: false
       CHAIN_ID: "${TANGLE_CHAIN_ID}"
       PORT: "${TANGLE_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${TANGLE_CHAIN_SUBNETWORK}"
