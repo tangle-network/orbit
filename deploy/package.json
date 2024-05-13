@@ -16,10 +16,9 @@
     "format": "prettier --write '**/*.{ts,js,yml}'",
     "ts:check": "tsc --noEmit",
     "ts:build": "tsc",
-    "deploy": "ts-node main.ts",
-    "tangle": "ts-node tangle.ts",
-    "faucet": "ts-node faucet.ts",
-    "deposit": "ts-node deposit.ts",
+    "deploy": "node --loader ts-node/esm main.ts",
+    "faucet": "node --loader ts-node/esm faucet.ts",
+    "deposit": "node --loader ts-node/esm deposit.ts",
     "test": "mocha"
   },
   "dependencies": {
@@ -28,7 +27,7 @@
     "@webb-tools/proposals": "^1.0.8",
     "@webb-tools/utils": "^1.0.8",
     "@webb-tools/vbridge": "^1.0.8",
-    "@webb-tools/tangle-substrate-types": "0.3.2-hotfix.1",
+    "@webb-tools/tangle-substrate-types": "0.5.5",
     "chalk": "^4",
     "ecpair": "^2.1.0",
     "ethers": "5.7.2",
