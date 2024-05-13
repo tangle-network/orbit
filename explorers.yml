@@ -120,6 +120,8 @@ services:
       PORT: "${ATHENA_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${ATHENA_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "athena-explorer.${DOMAIN}"
+    ports:
+     - ${ATHENA_CHAIN_EXPLORER_PORT}:${ATHENA_CHAIN_EXPLORER_PORT}
     volumes:
       - ./logs/athena_blockscout/:/app/logs/
     logging:
@@ -154,6 +156,8 @@ services:
       PORT: "${HERMES_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${HERMES_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "hermes-explorer.${DOMAIN}"
+    ports:
+     - ${HERMES_CHAIN_EXPLORER_PORT}:${HERMES_CHAIN_EXPLORER_PORT}
     volumes:
       - ./logs/hermes_blockscout:/app/logs/
 
@@ -189,6 +193,8 @@ services:
       PORT: "${DEMETER_CHAIN_EXPLORER_PORT}"
       SUBNETWORK: "${DEMETER_CHAIN_SUBNETWORK}"
       BLOCKSCOUT_HOST: "demeter-explorer.${DOMAIN}"
+    ports:
+     - ${DEMETER_CHAIN_EXPLORER_PORT}:${DEMETER_CHAIN_EXPLORER_PORT}
     volumes:
       - ./logs/demeter_blockscout:/app/logs/
     logging:
