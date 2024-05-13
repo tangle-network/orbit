@@ -6,7 +6,7 @@ networks:
 
 services:
   athena_chain:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.13.14
     container_name: athena-chain
     ports:
       - ${ATHENA_CHAIN_PORT}:8545
@@ -51,7 +51,7 @@ services:
         max-file: "10"
 
   hermes_chain:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.13.14
     container_name: hermes-chain
     ports:
       - ${HERMES_CHAIN_PORT}:8545
@@ -96,7 +96,7 @@ services:
         max-file: "10"
 
   demeter_chain:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.13.14
     container_name: demeter-chain
     ports:
       - ${DEMETER_CHAIN_PORT}:8545
